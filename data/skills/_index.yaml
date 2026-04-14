@@ -1,0 +1,89 @@
+# Skill-Register
+# Schnellregister für Semantic Matching durch den Skill-Loader.
+# Quelle der Wahrheit ist jeweils die Skill-MD-Datei — dieses Register
+# wird beim Skill-Build / Skill-Update mit aktualisiert.
+
+skills:
+  - id: neuen-skill-erstellen
+    name: Neuen Skill erstellen
+    path: skills/neuen-skill-erstellen.md
+    status: Aktiv
+    owner: "[OWNER]"
+    ampel: "🟡"
+    execution_mode: Strict
+    nutzungsart: public
+    keywords:
+      - skill erstellen
+      - neuen skill
+      - skill bauen
+      - skill entwickeln
+      - create skill
+      - skill anlegen
+      - prozess dokumentieren
+      - sop erstellen
+    beschreibung: >
+      Meta-Skill: Erstellt neue Skills im System via strukturiertem
+      Interview. Führt durch Briefing, Governance, SOP, Kontext-Mapping,
+      DoD und Activation Gate.
+
+  - id: angebot-erstellen
+    name: Angebot erstellen
+    path: skills/angebot-erstellen.md
+    status: Aktiv
+    owner: "[OWNER]"
+    ampel: "🟡"
+    execution_mode: Strict
+    nutzungsart: public
+    keywords:
+      - angebot
+      - offer
+      - proposal
+      - kundenangebot
+      - angebot schreiben
+      - angebot erstellen
+      - preisangebot
+    beschreibung: >
+      Erstellt eine vollständige Angebotsseite auf Basis eines Kundenbriefings.
+      Analysiert Bedarf, definiert Angebotsstruktur und schreibt das Angebot
+      im definierten Format.
+
+  - id: kundenprojekt-onboarden
+    name: Kundenprojekt onboarden
+    path: skills/kundenprojekt-onboarden.md
+    status: Aktiv
+    owner: "[OWNER]"
+    ampel: "🟢"
+    execution_mode: Strict
+    nutzungsart: public
+    keywords:
+      - projekt
+      - onboarding
+      - kickoff
+      - kundenprojekt
+      - projekt aufsetzen
+      - projekt starten
+      - stakeholder map
+    beschreibung: >
+      Setzt ein neues Kundenprojekt vollständig auf: Kickoff vorbereiten,
+      Projektseite anlegen, Stakeholder-Map erstellen, Kommunikationsplan
+      definieren.
+
+  - id: tages-shutdown
+    name: Tages-Shutdown & Sprint-Prep
+    path: skills/tages-shutdown.md
+    status: Aktiv
+    owner: "[OWNER]"
+    ampel: "🟢"
+    execution_mode: Strict
+    nutzungsart: private
+    keywords:
+      - shutdown
+      - tagesabschluss
+      - sprint
+      - tagesplan
+      - morgen planen
+      - tages rückblick
+      - daily review
+    beschreibung: >
+      Tagesabschluss mit Rückblick, Sprint-Plan für morgen, Diktat &
+      Delegation, Archivierung in Briefing-Datenbank.

@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Runtime data
+data/tasks/*.yaml
+data/tasks/*.md
+data/meetings/*.yaml
+data/meetings/*.md
+data/feedback/entries/*.yaml
+data/feedback/entries/*.md
+!data/**/.gitkeep
+!data/**/_index.yaml
+!data/**/_schema.yaml
+
+# Logs
+*.log
+logs/

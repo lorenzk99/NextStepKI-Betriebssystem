@@ -1,0 +1,33 @@
+# Schema für Feedback-Einträge
+# Jeder Eintrag ist eine eigene YAML-Datei in entries/YYYY-MM-DD-slug.yaml
+
+# ---- Struktur ----
+# id: YYYY-MM-DD-slug
+# titel: <Kurze, spezifische Beschreibung mit Bereich-Prefix>
+# typ: [erfolg | fehler | verbesserungs-idee | skill-selection]
+# status: [neu | geprueft | umgesetzt | ki-ausfuehrung]
+# verantwortlich: <Skill Owner oder Agent Owner>
+# erstellt_von: <Agent oder User>
+# erstellt_am: YYYY-MM-DD
+# skill_id: <betroffener Skill oder "system" oder "governance">
+# was_ist_passiert: |
+#   <mehrzeilige Beschreibung>
+# learning: |
+#   <mehrzeilig: was lernen wir daraus?>
+# umgesetzte_aktion: |
+#   <nach Umsetzung ausfüllen: was wurde geändert?>
+# tags: [tag1, tag2]
+
+# ---- Typen ----
+# 👍 erfolg              = Etwas hat hervorragend funktioniert
+# 👎 fehler              = Output war falsch/unbrauchbar
+# 💡 verbesserungs-idee  = Strukturelle Verbesserung
+# 🔍 skill-selection     = Falscher Skill vorgeschlagen / Skill fehlt
+
+# ---- Status-Workflow ----
+# neu            → Feedback wurde erfasst
+# geprueft       → Verantwortlicher hat gesichtet und bewertet
+# umgesetzt      → Änderung wurde durchgeführt
+# ki-ausfuehrung → Wird automatisiert vom Improvement Loop verarbeitet
+
+# Beispiel siehe: data/feedback/entries/example-template.yaml (optional)

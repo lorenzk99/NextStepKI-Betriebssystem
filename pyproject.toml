@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nextstep-os"
+version = "0.1.0"
+description = "NextStepKI KI-Betriebssystem – Skills, Kontext, Governance und Agenten als ausführbares System auf Basis des Claude Agent SDK."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "NextStepKI" }]
+dependencies = [
+    "claude-agent-sdk>=0.1.0",
+    "anthropic>=0.40.0",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "python-frontmatter>=1.1",
+    "watchdog>=4.0",
+    "typer>=0.12",
+    "rich>=13.7",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+nextstep-os = "nextstep_os.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nextstep_os"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

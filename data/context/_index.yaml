@@ -1,0 +1,116 @@
+# Kontext-Register
+# Enthält alle Kontext-Einträge des Systems mit Metadaten.
+# Der context_loader liest diese Datei für Schnell-Lookups.
+
+entries:
+  # ---------- Persönlicher Kontext (Stufe 1) ----------
+  - id: firmenprofil
+    name: Firmenprofil
+    path: context/personal/firmenprofil.md
+    typ: personal
+    kontext_stufe: 1
+    token_schaetzung: 600
+    aktualisierung: quartalsweise
+    status: Aktiv
+    tags: [personal, unternehmen]
+    beschreibung: >
+      Unternehmensprofil des Nutzers. Wird bei jedem OS-Agent-Start im
+      Boot-Protokoll geladen.
+    skills: []
+
+  - id: rollenprofil
+    name: Rollenprofil
+    path: context/personal/rollenprofil.md
+    typ: personal
+    kontext_stufe: 1
+    token_schaetzung: 1200
+    aktualisierung: quartalsweise
+    status: Aktiv
+    tags: [personal, rolle]
+    beschreibung: >
+      Rollenprofil mit Verantwortlichkeiten, Tools, Aufgabenlandkarte
+      und Herausforderungen. Wird bei jedem OS-Agent-Start geladen.
+    skills: []
+
+  - id: kommunikationsstil
+    name: Kommunikationsstil
+    path: context/personal/kommunikationsstil.md
+    typ: personal
+    kontext_stufe: 1
+    token_schaetzung: 500
+    aktualisierung: bei_bedarf
+    status: Aktiv
+    tags: [personal, stil]
+    beschreibung: >
+      Schreib- und Kommunikationspräferenzen. Bei jedem Output relevant.
+    skills: []
+
+  - id: team-kontext
+    name: Team-Kontext
+    path: context/personal/team-kontext.md
+    typ: personal
+    kontext_stufe: 2
+    token_schaetzung: 800
+    aktualisierung: bei_teamaenderung
+    status: Aktiv
+    tags: [personal, team]
+    beschreibung: >
+      Team-Struktur, Schlüsselpersonen, Stakeholder, Kommunikationskanäle.
+      Wird situativ geladen, wenn Skill Team- oder Stakeholder-Kontext braucht.
+    skills: []
+
+  - id: prioritaeten-und-ziele
+    name: Prioritäten & Ziele
+    path: context/personal/prioritaeten-und-ziele.md
+    typ: personal
+    kontext_stufe: 2
+    token_schaetzung: 600
+    aktualisierung: monatlich
+    status: Aktiv
+    tags: [personal, ziele]
+    beschreibung: >
+      Aktuelle #1-Priorität, Fokusthemen, Deadlines, Quartalsziele.
+      Wird situativ geladen, wenn Priorisierung relevant ist.
+    skills: []
+
+  # ---------- Governance (Stufe 1 – von allen Skills geteilt) ----------
+  - id: governance-handbuch
+    name: Governance-Handbuch
+    path: governance/handbuch.md
+    typ: dokument
+    kontext_stufe: 1
+    token_schaetzung: 1500
+    aktualisierung: monatlich
+    status: Aktiv
+    tags: [governance]
+    beschreibung: >
+      Zentrale Governance-Regeln: Ampel-System, HIL, Execution-Modi,
+      Activation Gate, Datenklassifizierung. Wird von fast allen Skills
+      als Kern-Kontext geladen.
+    skills: ["*"]  # alle Skills
+
+  # ---------- Geteilte Datenbanken (Stufe 2) ----------
+  - id: skill-datenbank
+    name: Skill-Datenbank
+    path: skills/
+    typ: datenbank
+    kontext_stufe: 2
+    token_schaetzung: 3000
+    aktualisierung: laufend
+    status: Aktiv
+    tags: [meta]
+    beschreibung: >
+      Alle Skill-Einträge. Wird vom Skill-Scout und Meta-Skill geladen.
+    skills: [neuen-skill-erstellen]
+
+  # ---------- Hier eigene Quellen ergänzen ----------
+  # Beispiel:
+  # - id: angebots-template
+  #   name: Angebots-Template
+  #   path: context/sources/angebots-template.md
+  #   typ: dokument
+  #   kontext_stufe: 1
+  #   token_schaetzung: 1000
+  #   status: Aktiv
+  #   tags: [vertrieb, template]
+  #   skills: [angebot-erstellen]
