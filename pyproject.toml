@@ -33,7 +33,7 @@ dev = [
 nextstep-os = "nextstep_os.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/nextstep_os"]
+packages = ["src/nextstep_os", "src/mcp_servers"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

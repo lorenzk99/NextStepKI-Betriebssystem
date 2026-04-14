@@ -26,6 +26,7 @@ from ..core.governance import GovernanceDecision, evaluate
 from ..core.models import Skill, SkillMatch
 from ..core.skill_loader import best_match, load_skill_by_id, match_skills
 from ..core.telemetry import track
+from ..core.tools import resolve_tools_for_skill
 from .prompt_builder import build_os_agent_system_prompt
 from .sdk_bridge import AgentResult, query_os_agent
 
@@ -93,11 +94,16 @@ async def handle(
     system_prompt = assemble_prompt(state)
 
     skill_id = state.active_skill.id if state.active_skill else "__freitext__"
+    allowed_tools, mcp_servers = resolve_tools_for_skill(
+        state.config, state.active_skill
+    )
     with track(state.config, skill_id, source="os_agent") as run:
         result = await query_os_agent(
             state.config,
             system_prompt=system_prompt,
             user_message=user_message,
+            allowed_tools=allowed_tools or None,
+            mcp_servers=mcp_servers or None,
             stream_cb=stream_cb,
         )
         run.tokens_in = result.tokens_in

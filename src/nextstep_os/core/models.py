@@ -70,6 +70,9 @@ class Skill(BaseModel):
     ausgabe: list[str] = Field(default_factory=list)
     context: SkillContext = Field(default_factory=SkillContext)
     update_quellen: list[str] = Field(default_factory=list)
+    tools: list[str] = Field(default_factory=list)
+    """Explizite Tool-Allowlist im MCP-Adressraum, z.B. `mcp__nextstep_fs__fs_read`.
+    Leer ⇒ der Modus-Default gilt (siehe `core.tools.resolve_tools_for_skill`)."""
 
     # Markdown-Body-Sektionen
     body: str = ""  # kompletter Markdown-Body (SOP + DoD + Learnings)

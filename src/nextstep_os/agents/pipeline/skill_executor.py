@@ -20,6 +20,7 @@ from ...core.governance import evaluate
 from ...core.models import TaskStatus
 from ...core.skill_loader import load_skill_by_id
 from ...core.telemetry import track
+from ...core.tools import resolve_tools_for_skill
 from ..prompt_builder import build_os_agent_system_prompt
 from ..sdk_bridge import AgentResult, query_os_agent
 
@@ -79,12 +80,15 @@ async def execute_task(task_path: Path, *, config: Config | None = None) -> Exec
         f"---\nTask-Body:\n{post.content}\n---"
     )
 
+    allowed_tools, mcp_servers = resolve_tools_for_skill(config, skill)
     with track(config, skill.id, source="pipeline") as run:
         result: AgentResult = await query_os_agent(
             config,
             system_prompt=system_prompt,
             user_message=user_message,
             model=config.models.pipeline,
+            allowed_tools=allowed_tools or None,
+            mcp_servers=mcp_servers or None,
         )
         run.tokens_in = result.tokens_in
         run.tokens_out = result.tokens_out

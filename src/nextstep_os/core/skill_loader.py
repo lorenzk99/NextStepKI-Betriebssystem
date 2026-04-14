@@ -113,6 +113,7 @@ def load_skill(skill_path: Path) -> Skill:
         ausgabe=list(fm.get("ausgabe") or []),
         context=context,
         update_quellen=list(fm.get("update_quellen") or []),
+        tools=list(fm.get("tools") or []),
         body=post.content.strip(),
         path=skill_path,
     )

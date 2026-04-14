@@ -28,6 +28,7 @@ from .core.feedback import list_feedback, silent_patch_skill
 from .core.governance import evaluate
 from .core.models import FeedbackTyp, SkillStatus
 from .core.registry import update_skill_registry_entry
+from .core.review import build_monthly_report, suggest_skill_patch, write_report
 from .core.skill_loader import load_registry, load_skill_by_id, match_skills
 from .core.telemetry import aggregate, can_promote, read_runs
 
@@ -41,11 +42,13 @@ context_app = typer.Typer(help="Kontext-Verwaltung (boot, show)")
 pipeline_app = typer.Typer(help="Pipeline-Agents (einzeln oder run/watch)")
 standalone_app = typer.Typer(help="Standalone-Agents (inbox-reply, lead-dossier)")
 feedback_app = typer.Typer(help="Feedback-Loop (list, record, review)")
+review_app = typer.Typer(help="Monthly Review & LLM-Patch-Vorschläge")
 app.add_typer(skills_app, name="skills")
 app.add_typer(context_app, name="context")
 app.add_typer(pipeline_app, name="pipeline")
 app.add_typer(standalone_app, name="standalone")
 app.add_typer(feedback_app, name="feedback")
+app.add_typer(review_app, name="review")
 
 
 # --------------------------------------------------------------------------- #
@@ -547,6 +550,43 @@ def feedback_patch(skill_id: str, learning: str) -> None:
         raise typer.Exit(1)
     silent_patch_skill(skill.path, learning)
     console.print(f"✅ Silent-Patch auf {skill.path}")
+
+
+# --------------------------------------------------------------------------- #
+# Review
+# --------------------------------------------------------------------------- #
+
+
+@review_app.command("monthly")
+def review_monthly(
+    tage: int = typer.Option(30, help="Zeitraum in Tagen."),
+    save: bool = typer.Option(True, help="Report als Markdown speichern."),
+) -> None:
+    """Offline Monthly-Review-Briefing aus Feedback-DB + Telemetrie."""
+    cfg = load_config()
+    report = build_monthly_report(cfg, tage=tage)
+    if save:
+        path = write_report(cfg, report)
+        console.print(Panel.fit(f"Report gespeichert: {path}", title="Monthly Review"))
+    console.print(Markdown(report.to_markdown()))
+
+
+@review_app.command("suggest")
+def review_suggest(
+    skill_id: str,
+    apply: bool = typer.Option(False, help="Vorschlag direkt als Silent-Patch schreiben."),
+) -> None:
+    """LLM-gestützter Silent-Patch-Vorschlag aus Feedback-Einträgen."""
+    cfg = load_config()
+    proposal = asyncio.run(suggest_skill_patch(cfg, skill_id, apply=apply))
+    title = "Patch-Vorschlag" + (" (DryRun)" if proposal.dry_run else "")
+    style = "yellow" if proposal.dry_run else None
+    panel_body = (
+        f"Skill: {proposal.skill_id}\n"
+        f"Applied: {proposal.applied}\n\n"
+        f"{proposal.suggestion}"
+    )
+    console.print(Panel(panel_body, title=title, style=style) if style else Panel(panel_body, title=title))
 
 
 if __name__ == "__main__":
