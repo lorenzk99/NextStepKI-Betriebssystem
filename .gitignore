@@ -33,6 +33,7 @@ data/meetings/*.yaml
 data/meetings/*.md
 data/feedback/entries/*.yaml
 data/feedback/entries/*.md
+data/feedback/reviews/
 data/telemetry/
 !data/**/.gitkeep
 !data/**/_index.yaml
