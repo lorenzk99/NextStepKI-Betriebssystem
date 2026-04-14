@@ -25,6 +25,7 @@ from ..core.context_loader import (
 from ..core.governance import GovernanceDecision, evaluate
 from ..core.models import Skill, SkillMatch
 from ..core.skill_loader import best_match, load_skill_by_id, match_skills
+from ..core.telemetry import track
 from .prompt_builder import build_os_agent_system_prompt
 from .sdk_bridge import AgentResult, query_os_agent
 
@@ -84,16 +85,34 @@ async def handle(
     user_message: str,
     *,
     auto_select: bool = True,
+    stream_cb=None,
 ) -> AgentResult:
-    """Vollständiger Durchlauf: Skill-Select → Prompt → SDK-Call."""
+    """Vollständiger Durchlauf: Skill-Select → Prompt → SDK-Call (mit Telemetrie)."""
     if auto_select and state.active_skill is None:
         await select_skill(state, user_message)
     system_prompt = assemble_prompt(state)
-    return await query_os_agent(
-        state.config,
-        system_prompt=system_prompt,
-        user_message=user_message,
-    )
+
+    skill_id = state.active_skill.id if state.active_skill else "__freitext__"
+    with track(state.config, skill_id, source="os_agent") as run:
+        result = await query_os_agent(
+            state.config,
+            system_prompt=system_prompt,
+            user_message=user_message,
+            stream_cb=stream_cb,
+        )
+        run.tokens_in = result.tokens_in
+        run.tokens_out = result.tokens_out
+        run.cache_read = result.cache_read
+        run.cache_write = result.cache_write
+        run.hil_count = (
+            len(state.governance.hil_markers) if state.governance else 0
+        )
+        if result.dry_run:
+            run.status = "dry_run"
+        elif result.error:
+            run.status = "error"
+            run.error = result.error
+    return result
 
 
 # --------------------------------------------------------------------------- #

@@ -26,8 +26,10 @@ from .core import feedback as feedback_core
 from .core.context_loader import load_boot_context, load_context_for_skill
 from .core.feedback import list_feedback, silent_patch_skill
 from .core.governance import evaluate
-from .core.models import FeedbackTyp
+from .core.models import FeedbackTyp, SkillStatus
+from .core.registry import update_skill_registry_entry
 from .core.skill_loader import load_registry, load_skill_by_id, match_skills
+from .core.telemetry import aggregate, can_promote, read_runs
 
 
 load_dotenv()
@@ -52,27 +54,110 @@ app.add_typer(feedback_app, name="feedback")
 
 
 @app.command()
-def chat(message: str = typer.Argument(..., help="Deine Anfrage an den OS-Agent.")) -> None:
-    """Stelle eine Anfrage an den OS-Agent (einmaliger Durchlauf)."""
-    out = os_agent.run_once(message)
-    if out["match"]:
+def chat(
+    message: str = typer.Argument(None, help="Deine Anfrage. Weglassen → REPL-Modus."),
+    stream: bool = typer.Option(True, help="Tokens live streamen."),
+) -> None:
+    """OS-Agent: Einzelnachricht (mit Argument) oder REPL (ohne)."""
+    if message is None:
+        asyncio.run(_chat_repl(stream=stream))
+        return
+    asyncio.run(_chat_one(message, stream=stream))
+
+
+async def _chat_one(message: str, *, stream: bool) -> None:
+    state = await os_agent.boot()
+    top = await os_agent.select_skill(state, message)
+
+    if top:
         console.print(
             Panel.fit(
-                f"[bold]Skill:[/bold] {out['match']['name']} (score={out['match']['score']}, "
-                f"quality={out['match']['quality']})",
+                f"[bold]Skill:[/bold] {top.name}  ·  score={top.score}  ·  quality={top.quality.value}",
                 title="Skill-Selection",
             )
         )
     else:
-        console.print(Panel.fit("Kein Skill-Match gefunden – Freitext-Antwort.", title="Skill-Selection"))
-    if out["governance"]:
-        console.print(Panel(out["governance"], title="Governance"))
-    if out["dry_run"]:
         console.print(
-            Panel(out["output"], title="Agent-Output (DryRun)", style="yellow")
+            Panel.fit(
+                "Kein eindeutiger Skill-Match – Freitext-Antwort.",
+                title="Skill-Selection",
+            )
         )
+    if state.governance:
+        console.print(Panel(state.governance.summary(), title="Governance"))
+
+    if stream:
+        console.print(Panel.fit("[dim]Agent antwortet…[/dim]", title="Agent-Output"))
+        buffer: list[str] = []
+
+        def on_delta(delta: str) -> None:
+            buffer.append(delta)
+            console.print(delta, end="", soft_wrap=True, highlight=False)
+
+        result = await os_agent.handle(state, message, auto_select=False, stream_cb=on_delta)
+        console.print()  # Newline am Ende
+        if result.dry_run:
+            console.print(Panel(result.text, title="DryRun", style="yellow"))
+        if not buffer and not result.dry_run:
+            console.print(Panel(Markdown(result.text), title="Agent-Output"))
     else:
-        console.print(Panel(Markdown(out["output"]), title="Agent-Output"))
+        result = await os_agent.handle(state, message, auto_select=False)
+        title = "Agent-Output (DryRun)" if result.dry_run else "Agent-Output"
+        body = result.text if result.dry_run else Markdown(result.text)
+        style = "yellow" if result.dry_run else None
+        console.print(Panel(body, title=title, style=style) if style else Panel(body, title=title))
+
+
+async def _chat_repl(*, stream: bool) -> None:
+    state = await os_agent.boot()
+    console.print(
+        Panel.fit(
+            "[bold]NextStepKI OS-Agent — REPL[/bold]\n"
+            "Tippe deine Anfrage. `/exit` oder Ctrl-D zum Beenden.\n"
+            "`/reset` setzt den aktiven Skill zurück.",
+            title="Chat",
+        )
+    )
+    while True:
+        try:
+            msg = console.input("[bold cyan]›[/bold cyan] ")
+        except (EOFError, KeyboardInterrupt):
+            console.print("\n[dim]Beendet.[/dim]")
+            return
+        msg = msg.strip()
+        if not msg:
+            continue
+        if msg in {"/exit", "/quit"}:
+            return
+        if msg == "/reset":
+            state.active_skill = None
+            state.task_context = None
+            state.governance = None
+            console.print("[dim]Skill zurückgesetzt.[/dim]")
+            continue
+
+        top = await os_agent.select_skill(state, msg)
+        if top:
+            console.print(
+                f"[dim]↳ Skill: {top.name} (score={top.score}, {top.quality.value})[/dim]"
+            )
+        if stream:
+            def on_delta(delta: str) -> None:
+                console.print(delta, end="", soft_wrap=True, highlight=False)
+
+            result = await os_agent.handle(state, msg, auto_select=False, stream_cb=on_delta)
+            console.print()
+            if result.dry_run:
+                console.print(Panel(result.text, title="DryRun", style="yellow"))
+        else:
+            result = await os_agent.handle(state, msg, auto_select=False)
+            console.print(
+                Panel(
+                    result.text if result.dry_run else Markdown(result.text),
+                    title="Agent",
+                    style="yellow" if result.dry_run else None,
+                )
+            )
 
 
 @app.command()
@@ -81,6 +166,41 @@ def version() -> None:
     from . import __version__
 
     console.print(f"nextstep-os {__version__}")
+
+
+@app.command()
+def stats(skill_id: str = typer.Argument(None, help="Optional: nur ein Skill.")) -> None:
+    """Zeige aggregierte Skill-Run-Telemetrie."""
+    cfg = load_config()
+    runs = read_runs(cfg)
+    if not runs:
+        console.print("[yellow]Keine Telemetrie-Daten vorhanden.[/yellow]")
+        return
+    stats_map = aggregate(runs)
+    if skill_id:
+        stats_map = {k: v for k, v in stats_map.items() if k == skill_id}
+        if not stats_map:
+            console.print(f"[yellow]Keine Runs für `{skill_id}` registriert.[/yellow]")
+            return
+    table = Table(title="Skill-Run-Statistik")
+    for col in (
+        "Skill", "Total", "OK", "Errors", "DryRuns", "Ø Dauer (s)",
+        "Tokens in", "Tokens out", "Cache read",
+    ):
+        table.add_column(col)
+    for sid, s in sorted(stats_map.items()):
+        table.add_row(
+            sid,
+            str(s.total),
+            str(s.ok),
+            str(s.errors),
+            str(s.dry_runs),
+            f"{s.avg_duration_s:.2f}",
+            str(s.total_tokens_in),
+            str(s.total_tokens_out),
+            str(s.total_cache_read),
+        )
+    console.print(table)
 
 
 @app.command()
@@ -181,6 +301,46 @@ def skills_match(query: str, limit: int = 5) -> None:
     for m in matches:
         table.add_row(m.skill_id, f"{m.score:.2f}", m.quality.value, m.begruendung)
     console.print(table)
+
+
+@skills_app.command("promote")
+def skills_promote(
+    skill_id: str,
+    min_runs: int = typer.Option(3, help="Minimum Produktiv-Runs."),
+    min_success: int = typer.Option(3, help="Minimum erfolgreiche Runs."),
+    force: bool = typer.Option(False, help="Gate ignorieren (nicht empfohlen)."),
+) -> None:
+    """Activation Gate: Skill von Entwurf → Aktiv setzen (prüft Telemetrie)."""
+    cfg = load_config()
+    skill = load_skill_by_id(cfg, skill_id)
+    if skill.status == SkillStatus.AKTIV:
+        console.print(f"[yellow]Skill `{skill_id}` ist bereits Aktiv.[/yellow]")
+        return
+    if skill.status == SkillStatus.ARCHIVIERT:
+        console.print(f"[red]Skill `{skill_id}` ist archiviert und kann nicht aktiviert werden.[/red]")
+        raise typer.Exit(1)
+
+    darf, begruendung = can_promote(
+        cfg, skill_id, min_runs=min_runs, min_success=min_success
+    )
+    console.print(Panel.fit(begruendung, title="Activation-Gate"))
+    if not darf and not force:
+        console.print("[red]Aktivierung blockiert. --force zum Überschreiben.[/red]")
+        raise typer.Exit(1)
+
+    # Register-Eintrag patchen
+    update_skill_registry_entry(
+        cfg.paths.skills_index, skill_id, {"status": SkillStatus.AKTIV.value}
+    )
+    # Frontmatter in Skill-MD patchen
+    if skill.path is not None:
+        import frontmatter  # lokaler Import
+
+        post = frontmatter.load(skill.path)
+        post.metadata["status"] = SkillStatus.AKTIV.value
+        with skill.path.open("w", encoding="utf-8") as fh:
+            fh.write(frontmatter.dumps(post, sort_keys=False))
+    console.print(f"✅ Skill `{skill_id}` ist jetzt Aktiv.")
 
 
 # --------------------------------------------------------------------------- #

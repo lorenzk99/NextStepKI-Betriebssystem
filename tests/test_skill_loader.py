@@ -51,3 +51,31 @@ def test_best_match_passes_quality_threshold(real_config):
     result = best_match(real_config, "angebot für neuen kunden")
     assert result is not None
     assert result.skill_id == "angebot-erstellen"
+
+
+def test_phrase_match_beats_substring_collision(real_config):
+    """Regression: `Angebot erstellen` darf nicht mit `neuen-skill-erstellen`
+    verwechselt werden, nur weil der Substring `erstellen` gemeinsam ist."""
+    matches = match_skills(real_config, "Angebot erstellen für neuen Kunden")
+    assert matches[0].skill_id == "angebot-erstellen"
+    # Abstand muss deutlich sein (mindestens Faktor 2)
+    assert matches[0].score >= 2 * matches[1].score
+
+
+def test_stopwords_do_not_trigger_spurious_matches(real_config):
+    """`für`, `morgen`, `heute` etc. dürfen keinen Skill triggern."""
+    for query in ["Wetterbericht für morgen", "Aktienkurs heute", "Ich habe und"]:
+        for m in match_skills(real_config, query, limit=5):
+            assert m.score == 0.0, f"Stop-Wort triggerte Match bei: {query} → {m}"
+
+
+def test_phrase_keyword_boosts_score(real_config):
+    matches = match_skills(real_config, "neuen Skill anlegen")
+    assert matches[0].skill_id == "neuen-skill-erstellen"
+    assert matches[0].score >= 3.0  # Phrase-Boost wirkt
+
+
+def test_matcher_stable_for_short_single_word_query(real_config):
+    """Einzelnes Keyword-Wort sollte den Skill finden."""
+    matches = match_skills(real_config, "Angebot")
+    assert matches[0].skill_id == "angebot-erstellen"

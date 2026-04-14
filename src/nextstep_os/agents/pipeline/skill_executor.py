@@ -19,6 +19,7 @@ from ...core.context_loader import load_boot_context, load_context_for_skill
 from ...core.governance import evaluate
 from ...core.models import TaskStatus
 from ...core.skill_loader import load_skill_by_id
+from ...core.telemetry import track
 from ..prompt_builder import build_os_agent_system_prompt
 from ..sdk_bridge import AgentResult, query_os_agent
 
@@ -78,12 +79,23 @@ async def execute_task(task_path: Path, *, config: Config | None = None) -> Exec
         f"---\nTask-Body:\n{post.content}\n---"
     )
 
-    result: AgentResult = await query_os_agent(
-        config,
-        system_prompt=system_prompt,
-        user_message=user_message,
-        model=config.models.pipeline,
-    )
+    with track(config, skill.id, source="pipeline") as run:
+        result: AgentResult = await query_os_agent(
+            config,
+            system_prompt=system_prompt,
+            user_message=user_message,
+            model=config.models.pipeline,
+        )
+        run.tokens_in = result.tokens_in
+        run.tokens_out = result.tokens_out
+        run.cache_read = result.cache_read
+        run.cache_write = result.cache_write
+        run.hil_count = len(governance.hil_markers)
+        if result.dry_run:
+            run.status = "dry_run"
+        elif result.error:
+            run.status = "error"
+            run.error = result.error
 
     # Status je nach Ampel
     new_status = (
