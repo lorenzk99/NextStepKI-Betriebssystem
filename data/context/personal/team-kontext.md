@@ -4,58 +4,63 @@ name: Team-Kontext
 kontext_stufe: 2
 typ: personal
 aktualisierung: bei_teamaenderung
-letzte_aktualisierung: "[DATUM]"
+letzte_aktualisierung: "2026-04-20"
 ---
 
-# Team-Kontext: [NAME/BEREICH]
+# Team-Kontext: NextStepHR Kernteam
 
 > **Empfohlene Update-Frequenz:** Bei Teamänderungen
 
 ## Teamstruktur
 
-- **Teamgröße:** [Anzahl]
-- **Meine Rolle im Team:** [Beschreibung]
-- **Teamzweck:** [Was ist der gemeinsame Auftrag des Teams?]
+- **Teamgröße:** 3–5 Personen (Kernteam) + Board of Advisors
+- **Meine Rolle im Team:** CEO & Founder — Strategie, Vertrieb, Finanzen, Kundenkontakt
+- **Teamzweck:** Aufbau und Markteintritt der NextStepHR-Recruitingplattform im Gesundheitswesen
 
 ## Schlüsselpersonen (intern)
 
-### [Name 1] — [Rolle]
-- **Zusammenarbeit:** [Wie arbeiten wir zusammen?]
-- **Wann einbeziehen:** [Konkrete Trigger/Situationen]
-- **Bevorzugter Kanal:** [E-Mail, Slack, Call, ...]
+### Reche Soares — Head of Development
+- **Zusammenarbeit:** Verantwortlich für Technologie & Produktentwicklung. Lorenz gibt Prioritäten und Produktvision vor, Reche setzt technisch um und gibt Tech-Updates.
+- **Wann einbeziehen:** Produktentscheidungen, technische Machbarkeit, Plattform-Bugs, neue Feature-Anforderungen
+- **Bevorzugter Kanal:** Notion, Google Meet
 
-### [Name 2] — [Rolle]
-- **Zusammenarbeit:** [Beschreibung]
-- **Wann einbeziehen:** [Konkrete Trigger/Situationen]
-- **Bevorzugter Kanal:** [E-Mail, Slack, Call, ...]
+### Prasenjit Kaninde — Full-Stack-Entwickler
+- **Zusammenarbeit:** Umsetzung von Features und technischen Aufgaben unter Leitung von Reche.
+- **Wann einbeziehen:** Implementierungsdetails, Bug-Reports, Sprint-Aufgaben
+- **Bevorzugter Kanal:** Notion, Google Meet
 
-### [Name 3] — [Rolle]
-- **Zusammenarbeit:** [Beschreibung]
-- **Wann einbeziehen:** [Konkrete Trigger/Situationen]
-- **Bevorzugter Kanal:** [E-Mail, Slack, Call, ...]
+### Operative Unterstützung — Social Media & Marketing
+- **Zusammenarbeit:** Content-Erstellung und Ausspielung auf Social Media, Messe-Unterstützung
+- **Wann einbeziehen:** Kampagnen, LinkedIn-Content, Messe-Vorbereitung
+- **Bevorzugter Kanal:** Google Workspace
 
 ## Externe Stakeholder
 
-### [Partner/Kunde 1]
-- **Beziehung:** [Wie ist die Verbindung?]
-- **Relevanz:** [Warum wichtig?]
-- **Ansprechpartner bei uns:** [Wer loopt diesen Stakeholder?]
+### Kunden (Physiotherapiepraxen & Therapiezentren)
+- **Beziehung:** Primäre Zielgruppe, Meetings für Onboarding und Betreuung
+- **Relevanz:** Umsatz, Produkt-Feedback, Referenzen
+- **Ansprechpartner bei uns:** Lorenz (Vertrieb & Kundenbetreuung)
 
-### [Partner/Kunde 2]
-- **Beziehung:** [Beschreibung]
-- **Relevanz:** [Warum wichtig?]
+### Board of Advisors
+- **Beziehung:** Beratend — Expertise in ML, digitale Geschäftsmodelle, B2B-Strategie, HR-Transformation & Leadership
+- **Relevanz:** Strategische Weichenstellungen, Netzwerk, Fundraising-Support
+- **Ansprechpartner bei uns:** Lorenz
+
+### EXIST-Fördergeber
+- **Beziehung:** Öffentliche Förderung, regelmäßige Meilenstein-Berichte
+- **Relevanz:** Liquiditätssicherung in der Aufbauphase
+- **Ansprechpartner bei uns:** Lorenz
 
 ## Kommunikationskanäle
 
 | Kanal | Verwendung | Konvention |
 |---|---|---|
-| [E-Mail] | [Wofür – z.B. formale Kommunikation, externe Kontakte] | [z.B. 24h-Antwortzeit] |
-| [Slack/Teams] | [Wofür – schnelle Rückfragen, Team-Updates] | [z.B. DMs nur für Dringendes] |
-| [Meetings] | [Wofür – Sync, Entscheidungen, Workshops] | [z.B. max. 30 Min., Agenda im Voraus] |
-| [Notion/Confluence] | [Wofür – Dokumentation, Wissensbasis] | [z.B. jede Entscheidung dokumentieren] |
+| Notion | Projektmanagement, Dokumentation, Aufgaben, Wissensbasis | Single Source of Truth für alle internen Dokumente |
+| Google Workspace (Mail, Meet, Drive) | E-Mails, Videocalls, Dateien teilen | Formale Kommunikation mit Kunden und Partnern |
+| Google Meet | Meetings (intern + Kunden) | Kunden-Meetings als Hauptkontaktpunkt |
 
-## Ritual & Rhythmen
+## Rituale & Rhythmen
 
-- **Weekly Sync:** [Wann? Wer? Worum geht's?]
-- **Monthly Review:** [Wann? Wer? Worum geht's?]
-- **Quarterly Planning:** [Wann? Wer? Worum geht's?]
+- **Kunden-Meetings:** Regelmäßig — Onboarding, Betreuung, Feedback. Hauptsächlicher Meeting-Typ. Follow-ups und To-Dos entstehen hier.
+- **Team-Sync:** Regelmäßig über Notion + Calls — Priorisierung, Status-Updates, Blocker
+- **Advisor-Calls:** Bei Bedarf — strategische Fragen, Fundraising-Vorbereitung
