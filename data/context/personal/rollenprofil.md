@@ -4,29 +4,29 @@ name: Rollenprofil
 kontext_stufe: 1
 typ: personal
 aktualisierung: quartalsweise
-letzte_aktualisierung: "[DATUM]"
+letzte_aktualisierung: "2026-04-20"
 ---
 
-# Rollenprofil: [POSITIONSBEZEICHNUNG]
+# Rollenprofil: CEO & Founder
 
 > **Empfohlene Update-Frequenz:** Quartalsweise oder bei Rollenwechsel
 
 ## Position & Kontext
 
-- **Rolle:** [Bezeichnung]
-- **Unternehmen:** [Name]
-- **Abteilung/Bereich:** [Bereich]
-- **Berichtet an:** [Person/Rolle]
-- **Führt:** [Team/Anzahl oder "Keine direkte Führungsverantwortung"]
-- **Standort / Zeitzone:** [z.B. München, CET]
+- **Rolle:** CEO & Founder
+- **Unternehmen:** NextStepHR
+- **Abteilung/Bereich:** Geschäftsführung (alle Bereiche)
+- **Berichtet an:** Board of Advisors (beratend)
+- **Führt:** Kernteam 3–5 Personen (Reche Soares – Head of Dev, Prasenjit Kaninde – Full-Stack, operative Unterstützung Marketing)
+- **Standort / Zeitzone:** Deutschland, CET
 
 ## Kernverantwortlichkeiten
 
-1. **[Bereich 1]** — [Konkrete Beschreibung in 1 Satz]
-2. **[Bereich 2]** — [Konkrete Beschreibung in 1 Satz]
-3. **[Bereich 3]** — [Konkrete Beschreibung in 1 Satz]
-4. **[Bereich 4]** — [Konkrete Beschreibung in 1 Satz]
-5. **[Bereich 5]** — [Konkrete Beschreibung in 1 Satz]
+1. **Strategie & Vision** — Geschäftsmodell, Marktpositionierung, Produktstrategie definieren und steuern
+2. **Vertrieb & Kundenakquise** — Erstkontakte, Messen, Inbound-Pipeline, Vertragsabschlüsse
+3. **Fundraising & Finanzen** — EXIST-Förderung verwalten, Seed-Runde vorbereiten, Finanzplanung
+4. **Partnerschaften & Netzwerk** — Jobportale, Branchenverbände, Advisors koordinieren
+5. **Operations & Administration** — Verträge, Buchhaltung/Belege, rechtliche Grundlagen
 
 ## Digitale Arbeitsumgebung
 
@@ -34,62 +34,66 @@ letzte_aktualisierung: "[DATUM]"
 
 | Tool | Wofür? | Häufigkeit |
 |---|---|---|
-| [Tool 1] | [Einsatzzweck] | [täglich/wöchentlich/monatlich] |
-| [Tool 2] | [Einsatzzweck] | [täglich/wöchentlich/monatlich] |
-| [Tool 3] | [Einsatzzweck] | [täglich/wöchentlich/monatlich] |
-| [Tool 4] | [Einsatzzweck] | [täglich/wöchentlich/monatlich] |
-| [Tool 5] | [Einsatzzweck] | [täglich/wöchentlich/monatlich] |
+| E-Mail (Gmail o.ä.) | Kundenkommunikation, Partneranfragen, Bewerbungen | täglich |
+| Google Docs / Notion | Verträge, Angebote, interne Dokumentation | täglich |
+| Kalender | Meetings, Messen, Deadlines | täglich |
+| LinkedIn | Netzwerk, Content, Recruiting-Sichtbarkeit | wöchentlich |
+| Buchhaltungstool | Belege, Rechnungen, EXIST-Nachweise | wöchentlich |
 
 ### Datenquellen & Ablageorte
 
-- [Quelle 1 – wo liegen welche Daten?]
-- [Quelle 2]
-- [Quelle 3]
+- Google Drive / Notion — Verträge, Angebote, Pitch-Decks
+- E-Mail-Postfach — Kundenkommunikation, Partneranfragen
+- Buchhaltungstool — Belege, Rechnungen, Steuerdokumente
 
 ### Verfügbare KI-Tools
 
-- [KI-Tool 1 – z.B. Claude, ChatGPT, Copilot]
-- [KI-Tool 2]
+- Claude (NextStepKI-Betriebssystem) — Kernassistent für alle Automatisierungen
+- GitHub Copilot (Dev-Team) — Codeunterstützung
 
 ## Aufgabenlandkarte
 
-| # | Aufgabe | Häufigkeit | Zeit/Woche | Tools |
+| # | Aufgabe | Häufigkeit | Zeit/Woche | Automatisierungspotenzial |
 |---|---|---|---|---|
-| 1 | [Aufgabe] | [täglich/wöchentlich] | [Xh] | [Tools] |
-| 2 | [Aufgabe] | [Häufigkeit] | [Xh] | [Tools] |
-| 3 | [Aufgabe] | [Häufigkeit] | [Xh] | [Tools] |
-| 4 | [Aufgabe] | [Häufigkeit] | [Xh] | [Tools] |
-| 5 | [Aufgabe] | [Häufigkeit] | [Xh] | [Tools] |
+| 1 | E-Mails schreiben & beantworten | täglich | 5–8h | Hoch — Entwürfe durch KI |
+| 2 | Verträge erstellen | wöchentlich | 2–3h | Hoch — Vorlagen + KI-Befüllung |
+| 3 | Belege & Buchhaltung | wöchentlich | 2–3h | Mittel — Kategorisierung + Zuordnung |
+| 4 | LinkedIn-Beiträge | wöchentlich | 1–2h | Hoch — KI-Entwurf + Planung |
+| 5 | Meetings + Follow-ups | wöchentlich | 3–5h | Hoch — Transkription + Task-Extraktion |
 
-**Gesamtzeit:** ca. [X]h/Woche
+**Gesamtzeit:** ca. 15–20h/Woche (administrative Aufgaben, die automatisiert werden sollen)
 
 ## Herausforderungen & Wünsche
 
 ### Top-3-Zeitfresser
 
-1. [konkreter Zeitfresser]
-2. [konkreter Zeitfresser]
-3. [konkreter Zeitfresser]
+1. E-Mails formulieren und beantworten — viel Kommunikation, wenig Templates
+2. Verträge und Angebote manuell zusammenstellen — repetitiv, aber fehlersensibel
+3. Belege sortieren und zuordnen — notwendig, aber kein Wertschöpfungsbeitrag
 
 ### Pain Points (mit Bezug zu Aufgaben)
 
-- **Aufgabe [#]:** [Pain Point]
-- **Aufgabe [#]:** [Pain Point]
+- **Aufgabe 1 (E-Mails):** Jede Mail von Grund auf schreiben kostet viel Zeit, obwohl viele Muster sich wiederholen
+- **Aufgabe 2 (Verträge):** Kein standardisierter Prozess, Copy-Paste aus alten Verträgen fehleranfällig
+- **Aufgabe 3 (Belege):** Medienbruch zwischen Eingang (PDF/Foto) und Buchhaltungssystem
 
 ### Manuelle Workarounds & Medienbrüche
 
-- [Beschreibung eines Workarounds / Medienbruchs]
+- Verträge werden per Copy-Paste aus älteren Dokumenten zusammengestellt
+- Belege manuell in Buchhaltungstool eingetragen
+- Meeting-Notizen per Hand in To-Dos überführt
 
 ### Wunsch ("Knopfdruck")
 
-> Wenn ich einen Knopf drücken könnte und eine Aufgabe wäre sofort erledigt, wäre es: **[konkrete Aufgabe]**
+> Wenn ich einen Knopf drücken könnte und eine Aufgabe wäre sofort erledigt, wäre es: **E-Mail-Entwürfe für alle Standardsituationen (Kundenanfragen, Follow-ups, Partneransprache) automatisch vorbereitet haben**
 
 ## Mission
 
-[1–3 Sätze: Was ist der Kern der Rolle? Welchen Beitrag leistet sie für das Unternehmen?]
+Als CEO & Founder von NextStepHR liegt mein Fokus auf Wachstum: Kunden gewinnen, Produkt steuern, Funding sichern. Administrative Aufgaben (Verträge, Buchhaltung, E-Mails) sind notwendig, aber sollen so wenig Zeit wie möglich beanspruchen — damit ich mich auf Vertrieb, Strategie und Produktentwicklung konzentrieren kann.
 
 ## Meine Ergebnisse — das will ich delivern
 
-- [Ergebnis/KPI 1]
-- [Ergebnis/KPI 2]
-- [Ergebnis/KPI 3]
+- Erste zahlende Kunden im Physio-Segment bis Q3 2026
+- EXIST-Meilensteine fristgerecht erfüllen
+- Seed-Runde vorbereiten und abschließen
+- Funktionierende Recruiting-Plattform mit ersten Performance-Daten
