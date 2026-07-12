@@ -68,6 +68,32 @@ skills:
       Projektseite anlegen, Stakeholder-Map erstellen, Kommunikationsplan
       definieren.
 
+  - id: email-entwurf
+    name: E-Mail-Entwurf
+    path: skills/email-entwurf.md
+    status: Aktiv
+    owner: "Lorenz Kopp"
+    ampel: "🟡"
+    execution_mode: Strict
+    nutzungsart: public
+    keywords:
+      - email
+      - e-mail
+      - mail
+      - mail schreiben
+      - email schreiben
+      - antwort schreiben
+      - antwortmail
+      - follow up
+      - follow-up
+      - erstkontakt
+      - kundenmail
+      - anfrage beantworten
+    beschreibung: >
+      Schreibt einen E-Mail-Entwurf im Kommunikationsstil des Nutzers.
+      Deckt Standardsituationen ab: Erstkontakt, Follow-up, Antwort auf
+      Kundenanfrage, Partnerkontakt. Vor Versand immer prüfen.
+
   - id: tages-shutdown
     name: Tages-Shutdown & Sprint-Prep
     path: skills/tages-shutdown.md

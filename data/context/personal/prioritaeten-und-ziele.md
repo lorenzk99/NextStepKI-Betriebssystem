@@ -4,7 +4,7 @@ name: Prioritäten & Ziele
 kontext_stufe: 2
 typ: personal
 aktualisierung: monatlich
-letzte_aktualisierung: "[DATUM]"
+letzte_aktualisierung: "2026-07-12"
 ---
 
 # Aktuelle Prioritäten & Ziele
@@ -14,48 +14,54 @@ letzte_aktualisierung: "[DATUM]"
 
 ## #1 Priorität (aktuell)
 
-**[Thema]**
+**Markteintritt Physio-Segment & erste zahlende Kunden**
 
-[1–2 Sätze Kontext: Warum ist das gerade wichtig? Was hängt davon ab?]
+Der Markteintritt in Physiotherapiepraxen ist die entscheidende Phase 2026 — davon hängen Umsatzstart, Case-Studies und die Seed-Runde ab. Alles andere ordnet sich diesem Ziel unter.
 
 ## Aktuelle Fokusthemen (3–5)
 
-1. **[Thema 1]** — [Kurzbeschreibung, warum wichtig]
-2. **[Thema 2]** — [Kurzbeschreibung]
-3. **[Thema 3]** — [Kurzbeschreibung]
-4. **[Thema 4]** — [Kurzbeschreibung]
-5. **[Thema 5]** — [Kurzbeschreibung]
+1. **Kundenakquise Physio** — Messen, Inbound-Kanäle, Erstgespräche in laufende Verträge überführen
+2. **Vertragserstellung & Onboarding-Prozess** — standardisierte, KI-gestützte Verträge (Zeitfresser Nr. 2 abbauen)
+3. **EXIST-Meilensteine** — Nachweise, Berichte, Liquiditätssicherung
+4. **Seed-Runde vorbereiten** — Pitch-Deck, Investoren-Kontakte, Financials
+5. **Plattform-Reife** — datenbasierte Kanalempfehlung + ATS produktiv, Performance-Daten sammeln
 
 ## Zeitkritische Deadlines
 
 | Deadline | Was | Status |
 |---|---|---|
-| [YYYY-MM-DD] | [Beschreibung] | [offen / in Arbeit / Review] |
-| [YYYY-MM-DD] | [Beschreibung] | [offen / in Arbeit / Review] |
-| [YYYY-MM-DD] | [Beschreibung] | [offen / in Arbeit / Review] |
+| Q3 2026 | Erste zahlende Kunden im Physio-Segment | in Arbeit |
+| laufend | EXIST-Berichte & Meilensteine | in Arbeit |
+| 2027 | Seed-Runde abschließen | Vorbereitung |
+| 2027/28 | Gewinnschwelle erreichen | strategisches Ziel |
 
 ## Quartalsziele
 
-> Format offen: OKRs, Rocks, KPIs, SMART-Ziele
+### Q3 2026
 
-### Q[X] 20[XX]
-
-- **Ziel 1:** [Beschreibung]
-  - Key Result 1: [messbar]
-  - Key Result 2: [messbar]
-- **Ziel 2:** [Beschreibung]
-  - Key Result 1: [messbar]
+- **Ziel 1:** Erste zahlende Kunden gewinnen
+  - Key Result 1: 3–5 unterzeichnete SaaS-Verträge
+  - Key Result 2: Erste Vermittlungsprovision realisiert
+- **Ziel 2:** Vertriebsprozess professionalisieren
+  - Key Result 1: Standardisierte Verträge & Angebote (KI-gestützt)
+  - Key Result 2: E-Mail-Templates & Follow-up-Prozess etabliert
+- **Ziel 3:** Plattform-Basisfunktionen produktiv
+  - Key Result 1: KI-Kanalempfehlung liefert erste echte Empfehlungen
+  - Key Result 2: ATS-Funktionalität end-to-end nutzbar
 
 ## Aktive Projekte & Workstreams
 
-| Projekt | Beschreibung | Status | Deadline |
+| Projekt | Beschreibung | Status | Priorität |
 |---|---|---|---|
-| [Name] | [1 Satz] | [Phase] | [YYYY-MM-DD] |
-| [Name] | [1 Satz] | [Phase] | [YYYY-MM-DD] |
-| [Name] | [1 Satz] | [Phase] | [YYYY-MM-DD] |
+| Physio-Markteintritt | Vertriebs- & Onboarding-Prozess für Physiotherapiepraxen | in Arbeit | #1 |
+| NextStepKI-Betriebssystem | KI-Assistent für Admin-Tasks (Verträge, Mails, Belege) | Aufbau | #2 |
+| EXIST-Reporting | Regelmäßige Nachweise & Meilenstein-Berichte | laufend | #3 |
+| Seed-Runde | Investorenansprache & Materialien | Vorbereitung | #4 |
+| Plattform-Development | Feature-Rollout unter Leitung Reche/Prasenjit | in Arbeit | #5 |
 
 ## Erwartete Outcomes in den nächsten 90 Tagen
 
-- [Outcome 1 – was soll am Ende des Quartals getan/geliefert sein?]
-- [Outcome 2]
-- [Outcome 3]
+- 3–5 zahlende Physio-Kunden onboarded
+- Standardisierte Verträge & E-Mail-Templates im NextStepKI-System verankert
+- EXIST-Meilenstein fristgerecht erfüllt
+- Pitch-Deck v1 für Seed-Runde bereit

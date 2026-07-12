@@ -4,67 +4,83 @@ name: Kommunikationsstil
 kontext_stufe: 1
 typ: personal
 aktualisierung: bei_bedarf
-letzte_aktualisierung: "[DATUM]"
+letzte_aktualisierung: "2026-07-12"
 ---
 
 # Kommunikationsstil
 
 > **Empfohlene Update-Frequenz:** Selten, bei Bedarf
+> ⚠️ Default-Werte — bitte anpassen, wenn dein Stil abweicht
 
 ## Format-Präferenzen
 
-- **Länge:** [kurz und präzise / ausführlich mit Kontext]
-- **Struktur:** [Bullets bevorzugt / Fließtext bevorzugt / kontextabhängig]
-- **Absätze:** [kurz und gescannt / ausformuliert]
-- **Headers:** [mit Hierarchie / ohne / nur bei längeren Texten]
-- **Code/Snippets:** [immer im Codeblock / Inline / etc.]
+- **Länge:** Kurz und präzise — Kern zuerst, Details nur wenn nötig
+- **Struktur:** Bullets bei Aufzählungen, Fließtext bei Argumentation
+- **Absätze:** Kurz, gut scannbar
+- **Headers:** Nur bei längeren Texten oder mehrteiligen E-Mails
+- **Code/Snippets:** Für interne Kommunikation im Codeblock
 
 ## Ton & Stimme
 
 ### Intern (Team, Kollegen)
-[Beschreibung: Direkt, locker, Du-Form? Oder eher formal-respektvoll?]
+Direkt, locker, Du-Form. Klare Ansagen ohne Umschweife.
 
 ### Extern (Kunden, Partner)
-[Beschreibung: Professionell, aber warm? Strikt formal? Sie oder Du?]
+Professionell, aber warm und persönlich. In der Regel Sie-Form bei Erstkontakt, Du nach Absprache. Kein Verkäufer-Sprech.
 
 ### In Kundengesprächen
-[Beschreibung: Beratend, coaching-orientiert, direkt?]
+Beratend, auf Augenhöhe. Zuhören → verstehen → konkret vorschlagen. Kein Druck.
 
 ## Do's
 
-- [Do 1 — z.B. "Immer mit dem Kern der Antwort starten"]
-- [Do 2 — z.B. "Konkrete Beispiele statt Abstraktion"]
-- [Do 3 — z.B. "Listen bei mehr als 3 Punkten"]
-- [Do 4]
-- [Do 5]
+- Mit dem Kern der Nachricht starten (kein "Ich hoffe, es geht Ihnen gut...")
+- Konkrete Beispiele und Zahlen statt abstrakter Aussagen
+- Klare Handlungsaufforderung oder nächster Schritt am Ende
+- Bei Kundenmails: Nutzen für den Kunden explizit machen
+- Personalisierung durch Bezug auf Kontext (Branche, Praxis, letztes Gespräch)
 
 ## Don'ts
 
-- [Don't 1 — z.B. "Keine Emojis in externen E-Mails"]
-- [Don't 2 — z.B. "Keine Unsicherheits-Phrasen wie 'vielleicht könnte man'"]
-- [Don't 3 — z.B. "Keine Marketing-Superlative"]
-- [Don't 4]
-- [Don't 5]
+- Keine Marketing-Superlative ("innovativ", "revolutionär", "einzigartig")
+- Keine ChatGPT-Floskeln ("Lassen Sie uns...", "Es freut mich...", "Ich hoffe...")
+- Keine überflüssigen Höflichkeitsformeln vor dem eigentlichen Anliegen
+- Keine Ausrufezeichen außer bei echter Betonung
+- Keine Emojis in externen Business-E-Mails (intern okay, wenn passend)
 
 ## Pet Peeves
 
 > Dinge, die in KI-generierten Texten absolut nicht vorkommen dürfen.
 
-- [z.B. "Moderne Lösungen", "ganzheitlich", "innovativ"]
-- [z.B. "Ausrufezeichen mehr als 1× pro Text"]
-- [z.B. "ChatGPT-typische Formulierungen wie 'Lassen Sie uns...'"]
+- "moderne Lösung", "ganzheitlich", "innovativ", "cutting-edge"
+- "Lassen Sie uns...", "Es freut mich sehr, Ihnen mitteilen zu dürfen..."
+- Mehr als 1 Ausrufezeichen pro Text
+- Übertriebene Formalität ("Sehr geehrter Herr Doktor Muster, bezugnehmend auf...")
+- Passivkonstruktionen wo Aktiv geht
 
 ## Sprach-Regeln
 
-- **Sprache:** [Deutsch / Englisch / Mix — wann welche?]
-- **Anrede:** [Du/Sie-Regel nach Kanal + Kontext]
-- **Gendern:** [Ja/Nein, welche Form?]
-- **Eigennamen:** [Wie schreiben wir unser Unternehmen / unsere Produkte?]
+- **Sprache:** Deutsch (Standard), Englisch nur wenn Gegenüber englischsprachig
+- **Anrede:** Sie bei Erstkontakt & B2B-Kunden; Du intern und nach Absprache
+- **Gendern:** Neutrale Formulierungen bevorzugt (z.B. "Mitarbeitende", "Team"), keine Sternchen/Doppelpunkte
+- **Eigennamen:** "NextStepHR" (kein Leerzeichen), "NextStepKI" für das Betriebssystem
 
 ## Beispiele
 
 ### Gut
-> [Beispiel-Text, der genau den gewünschten Stil trifft]
+> Hallo Frau Müller,
+>
+> danke für Ihre Anfrage. Für Ihre Physiotherapiepraxis in München wäre unser SaaS-Paket mit KI-Kanalempfehlung passend — Sie sparen erfahrungsgemäß 30–40 % Streuverluste bei Stellenanzeigen.
+>
+> Passt ein 20-Minuten-Call nächste Woche Dienstag oder Donnerstag Vormittag?
+>
+> Viele Grüße
+> Lorenz Kopp
 
 ### Schlecht
-> [Beispiel-Text, der abschreckend wirkt — zu generisch, zu floskelhaft, etc.]
+> Sehr geehrte Frau Müller,
+>
+> ich hoffe, diese E-Mail erreicht Sie bei bester Gesundheit! Es freut mich sehr, Ihnen unsere innovative und ganzheitliche Recruiting-Lösung vorstellen zu dürfen, die maßgeschneidert für die Anforderungen moderner Physiotherapiepraxen entwickelt wurde!
+>
+> Lassen Sie uns doch gerne einen Termin vereinbaren, um über die vielfältigen Möglichkeiten zu sprechen!
+>
+> Mit freundlichen Grüßen
