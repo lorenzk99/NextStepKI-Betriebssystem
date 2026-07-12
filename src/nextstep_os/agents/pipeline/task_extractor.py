@@ -123,14 +123,31 @@ async def process_briefing(
         user_message=user_message,
         model=config.models.pipeline,
     )
+
+    # Fehler/DryRun: Status NICHT fortschreiben — sonst gehen die
+    # Action-Items still verloren und das Briefing wird nie erneut geprüft.
+    if result.error:
+        raise RuntimeError(
+            f"Task-Extraktion fehlgeschlagen für `{briefing_path.name}`: {result.error}"
+        )
+    if result.dry_run:
+        return TaskExtractResult(tasks=[], raw_output=result.text, dry_run=True)
+
     meeting_ref = post.metadata.get("id") or briefing_path.stem
     tasks = parse_tasks(result.text, meeting_ref=str(meeting_ref))
     for t in tasks:
         write_task(config, t)
 
-    # Briefing-Status updaten
-    post.metadata["status"] = "Tasks extrahiert"
+    # Briefing-Status updaten. 0 geparste Tasks können legitim sein
+    # (Meeting ohne Action-Items) — aber auch ein Format-Miss des Modells.
+    # Deshalb: zur Sicherheit auf Review stellen statt still abschließen.
+    post.metadata["status"] = "Tasks extrahiert" if tasks else "Wartet auf Review"
     post.metadata["pipeline_stage"] = "task_extractor"
+    if not tasks:
+        post.metadata["review_grund"] = (
+            "Keine Action-Items erkannt — bitte prüfen, ob das Meeting "
+            "wirklich keine hatte."
+        )
     with briefing_path.open("w", encoding="utf-8") as fh:
         fh.write(frontmatter.dumps(post, sort_keys=False))
 

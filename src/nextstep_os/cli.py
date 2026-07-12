@@ -13,6 +13,8 @@ from rich.panel import Panel
 from rich.table import Table
 
 from .agents import os_agent, runner
+from .core.briefing import build_daily_briefing, summarize_briefing
+from .core.tasks import by_status, load_tasks
 from .agents.pipeline import (
     feedback_logger,
     meeting_insight,
@@ -43,12 +45,14 @@ pipeline_app = typer.Typer(help="Pipeline-Agents (einzeln oder run/watch)")
 standalone_app = typer.Typer(help="Standalone-Agents (inbox-reply, lead-dossier)")
 feedback_app = typer.Typer(help="Feedback-Loop (list, record, review)")
 review_app = typer.Typer(help="Monthly Review & LLM-Patch-Vorschläge")
+tasks_app = typer.Typer(help="Aufgaben-Übersicht (list, show)")
 app.add_typer(skills_app, name="skills")
 app.add_typer(context_app, name="context")
 app.add_typer(pipeline_app, name="pipeline")
 app.add_typer(standalone_app, name="standalone")
 app.add_typer(feedback_app, name="feedback")
 app.add_typer(review_app, name="review")
+app.add_typer(tasks_app, name="tasks")
 
 
 # --------------------------------------------------------------------------- #
@@ -145,13 +149,18 @@ async def _chat_repl(*, stream: bool) -> None:
                 f"[dim]↳ Skill: {top.name} (score={top.score}, {top.quality.value})[/dim]"
             )
         if stream:
+            repl_buffer: list[str] = []
+
             def on_delta(delta: str) -> None:
+                repl_buffer.append(delta)
                 console.print(delta, end="", soft_wrap=True, highlight=False)
 
             result = await os_agent.handle(state, msg, auto_select=False, stream_cb=on_delta)
             console.print()
             if result.dry_run:
                 console.print(Panel(result.text, title="DryRun", style="yellow"))
+            elif result.error and not repl_buffer:
+                console.print(Panel(result.text, title="Fehler", style="red"))
         else:
             result = await os_agent.handle(state, msg, auto_select=False)
             console.print(
@@ -161,6 +170,19 @@ async def _chat_repl(*, stream: bool) -> None:
                     style="yellow" if result.dry_run else None,
                 )
             )
+
+
+@app.command()
+def briefing(
+    llm: bool = typer.Option(False, "--llm", help="Zusätzlich LLM-Summary mit Empfehlungen."),
+) -> None:
+    """☀️ Tagesbriefing: offene Aufgaben, Prioritäten, frische Learnings."""
+    cfg = load_config()
+    daily = build_daily_briefing(cfg)
+    console.print(Markdown(daily.to_markdown()))
+    if llm:
+        summary = asyncio.run(summarize_briefing(cfg, daily))
+        console.print(Panel(Markdown(summary), title="🤖 Founders-Associate-Summary"))
 
 
 @app.command()
@@ -371,12 +393,15 @@ def context_boot() -> None:
     console.print(
         Panel.fit(
             f"Stufe 1: {len(bundle.stufe_1)} Einträge · "
+            f"Stufe 2: {len(bundle.stufe_2)} Einträge · "
             f"~{bundle.total_tokens()} Tokens",
             title="Boot-Kontext",
         )
     )
     for item in bundle.stufe_1:
-        console.print(f"  • {item.entry.id} ({item.tokens} tokens) — {item.entry.path}")
+        console.print(f"  • [1] {item.entry.id} ({item.tokens} tokens) — {item.entry.path}")
+    for item in bundle.stufe_2:
+        console.print(f"  • [2] {item.entry.id} ({item.tokens} tokens) — {item.entry.path}")
     if bundle.skipped:
         console.print("[yellow]Übersprungen:[/yellow]")
         for sid, reason in bundle.skipped:
@@ -563,6 +588,55 @@ def feedback_patch(skill_id: str, learning: str) -> None:
         raise typer.Exit(1)
     silent_patch_skill(skill.path, learning)
     console.print(f"✅ Silent-Patch auf {skill.path}")
+
+
+# --------------------------------------------------------------------------- #
+# Tasks
+# --------------------------------------------------------------------------- #
+
+
+@tasks_app.command("list")
+def tasks_list(
+    alle: bool = typer.Option(False, "--alle", help="Auch erledigte Tasks anzeigen."),
+) -> None:
+    """Offene Aufgaben, gruppiert nach Status."""
+    cfg = load_config()
+    tasks = load_tasks(cfg, nur_offene=not alle)
+    if not tasks:
+        console.print("[yellow]Keine Aufgaben in der Task-DB.[/yellow]")
+        console.print(
+            "[dim]Tasks entstehen über die Meeting-Pipeline "
+            "(`nextstep-os pipeline run`) oder manuell in data/tasks/.[/dim]"
+        )
+        return
+    for status, items in by_status(tasks).items():
+        console.print(Panel.fit(f"[bold]{status}[/bold] ({len(items)})"))
+        for t in items:
+            faellig = f"  fällig: {t.faellig}" if t.faellig else ""
+            skill = f"  skill: {t.zugewiesener_skill}" if t.zugewiesener_skill else ""
+            console.print(f"  {t.prioritaet.value} {t.titel}  [dim]({t.id}){faellig}{skill}[/dim]")
+
+
+@tasks_app.command("show")
+def tasks_show(task_id: str) -> None:
+    """Details einer Aufgabe anzeigen."""
+    cfg = load_config()
+    for t in load_tasks(cfg):
+        if t.id == task_id or (t.path and t.path.stem == task_id):
+            console.print(
+                Panel.fit(
+                    f"[bold]{t.titel}[/bold]\n"
+                    f"Status: {t.status.value}  ·  Priorität: {t.prioritaet.value}\n"
+                    f"Fällig: {t.faellig or '—'}  ·  Skill: {t.zugewiesener_skill or '—'}\n"
+                    f"Meeting: {t.meeting_ref or '—'}  ·  Erstellt: {t.erstellt_am}",
+                    title=t.id,
+                )
+            )
+            if t.body.strip():
+                console.print(Panel(Markdown(t.body), title="Inhalt"))
+            return
+    console.print(f"[red]Task `{task_id}` nicht gefunden.[/red]")
+    raise typer.Exit(1)
 
 
 # --------------------------------------------------------------------------- #

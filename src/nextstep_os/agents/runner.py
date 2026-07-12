@@ -131,6 +131,7 @@ def watch(config: Config | None = None, *, interval: float = 5.0) -> None:
                 report.tasks_scouted,
                 report.tasks_executed,
                 report.tasks_logged,
+                report.errors,
             ]):
                 print(report.summary())
             time.sleep(interval)

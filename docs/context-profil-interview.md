@@ -77,7 +77,7 @@ Behalte Platzhalter nicht bei — ersetze sie durch meine Antworten.
 
 1. Übertrage die fünf Outputs in die jeweiligen Dateien unter
    `data/context/personal/`.
-2. Prüfe: `nextstep-os context boot` sollte alle fünf Einträge anzeigen.
+2. Prüfe: `nextstep-os context boot` zeigt die Stufe-1-Profile (Firmen-, Rollenprofil, Kommunikationsstil + Governance); Stufe-2-Profile (Team, Prioritäten) erscheinen im Skill-Kontext.
 3. Teste: `nextstep-os chat "Was ist heute mein Fokus?"` — der Agent
    sollte aus deinem Kontext zitieren.
 

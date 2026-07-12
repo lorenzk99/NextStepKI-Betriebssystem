@@ -21,17 +21,22 @@ from .models import Ampel, ExecutionMode, Skill, SkillStatus
 HIL_MARKER = "⏸️"
 AMPEL_EMOJI = {Ampel.GRUEN: "🟢", Ampel.GELB: "🟡", Ampel.ROT: "🔴"}
 
-HIL_TYPES = {
-    "approval": re.compile(
-        r"(approval\s*gate|freigabe|genehmigung|bestätigung)", re.IGNORECASE
-    ),
-    "input": re.compile(
-        r"(input\s*gate|rückfrage|klärung|nachfrage)", re.IGNORECASE
-    ),
-    "review": re.compile(
-        r"(review\s*gate|prüfung|review|qualitätssicherung)", re.IGNORECASE
-    ),
+# Explizite Gate-Labels haben Vorrang (»⏸️ **REVIEW GATE:** … Freigabe …«
+# ist ein Review-Gate, kein Approval-Gate, auch wenn »Freigabe« im Text steht).
+HIL_GATE_LABELS = {
+    "approval": re.compile(r"approval[\s-]*gate", re.IGNORECASE),
+    "input": re.compile(r"input[\s-]*gate", re.IGNORECASE),
+    "review": re.compile(r"review[\s-]*gate", re.IGNORECASE),
 }
+
+# Keyword-Fallback mit Wortgrenzen (»Erklärung« darf nicht als »Klärung« zählen)
+HIL_KEYWORDS = {
+    "approval": re.compile(r"\b(freigabe|genehmigung|bestätigung)\b", re.IGNORECASE),
+    "input": re.compile(r"\b(rückfrage|klärung|nachfrage)\b", re.IGNORECASE),
+    "review": re.compile(r"\b(prüfung|review|qualitätssicherung)\b", re.IGNORECASE),
+}
+
+_INLINE_CODE_RE = re.compile(r"`[^`]*`")
 
 
 # --------------------------------------------------------------------------- #
@@ -93,16 +98,27 @@ class GovernanceDecision:
 
 
 def detect_hil_markers(body: str) -> list[HILMarker]:
-    """Finde alle HIL-Gates (⏸️) im Skill-Body und klassifiziere sie."""
+    """Finde alle HIL-Gates (⏸️) im Skill-Body und klassifiziere sie.
+
+    Doku-Zeilen, in denen das ⏸️ nur innerhalb von Inline-Code (`…`) steht
+    (z.B. Format-Beschreibungen im Meta-Skill), zählen nicht als Gate.
+    """
     markers: list[HILMarker] = []
     for i, line in enumerate(body.splitlines()):
-        if HIL_MARKER not in line:
+        # ⏸️ in Backticks ist Dokumentation, kein Gate
+        effective = _INLINE_CODE_RE.sub("", line)
+        if HIL_MARKER not in effective:
             continue
         typ = "generic"
-        for label, regex in HIL_TYPES.items():
-            if regex.search(line):
+        for label, regex in HIL_GATE_LABELS.items():
+            if regex.search(effective):
                 typ = label
                 break
+        else:
+            for label, regex in HIL_KEYWORDS.items():
+                if regex.search(effective):
+                    typ = label
+                    break
         markers.append(HILMarker(position=i, line=line.strip(), typ=typ))
     return markers
 

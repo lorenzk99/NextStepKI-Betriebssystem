@@ -54,8 +54,16 @@ def _coerce_enum(enum_cls, value, default):
     try:
         return enum_cls(value)
     except ValueError:
+        text = str(value).strip()
+        # Erst über den Wert matchen (z.B. "Strict"), dann über den
+        # Member-NAMEN — damit `ampel: rot` nicht still zu GELB degradiert.
+        normalized = (
+            text.upper()
+            .replace("Ä", "AE").replace("Ö", "OE").replace("Ü", "UE")
+            .replace("ß", "SS")
+        )
         for member in enum_cls:
-            if str(member.value).lower() == str(value).lower():
+            if str(member.value).lower() == text.lower() or member.name == normalized:
                 return member
         return default
 
@@ -75,7 +83,7 @@ def _parse_registry_entry(raw: dict) -> SkillRegistryEntry:
             Nutzungsart, raw.get("nutzungsart"), Nutzungsart.PUBLIC
         ),
         keywords=list(raw.get("keywords") or []),
-        beschreibung=raw.get("beschreibung", "").strip(),
+        beschreibung=(raw.get("beschreibung") or "").strip(),
     )
 
 
@@ -89,7 +97,15 @@ def load_skill(skill_path: Path) -> Skill:
     """Parse eine Skill-Markdown-Datei vollständig."""
     post = frontmatter.load(skill_path)
     fm = dict(post.metadata)
-    ctx_raw = fm.get("context") or {}
+    if "id" not in fm or "name" not in fm:
+        raise ValueError(
+            f"Skill-Datei `{skill_path}` hat kein gültiges Frontmatter "
+            "(Pflichtfelder `id` und `name` fehlen). Bitte den "
+            "Frontmatter-Block `---\\nid: …\\nname: …\\n---` prüfen."
+        )
+    ctx_raw = fm.get("context")
+    if not isinstance(ctx_raw, dict):
+        ctx_raw = {}
     context = SkillContext(
         stufe_1_kern=list(ctx_raw.get("stufe_1_kern") or []),
         stufe_2_aufgabe=list(ctx_raw.get("stufe_2_aufgabe") or []),
@@ -125,6 +141,13 @@ def load_skill_by_id(config: Config, skill_id: str) -> Skill:
     for entry in registry:
         if entry.id == skill_id:
             full_path = config.paths.data / entry.path
+            if not full_path.exists():
+                raise FileNotFoundError(
+                    f"Skill `{skill_id}` steht im Register, aber die Datei "
+                    f"`{full_path}` existiert nicht. Register und "
+                    "Dateisystem sind auseinandergelaufen — bitte "
+                    "`data/skills/_index.yaml` korrigieren."
+                )
             return load_skill(full_path)
     raise KeyError(f"Skill `{skill_id}` nicht im Register gefunden")
 

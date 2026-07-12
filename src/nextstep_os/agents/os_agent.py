@@ -31,6 +31,11 @@ from .prompt_builder import build_os_agent_system_prompt
 from .sdk_bridge import AgentResult, query_os_agent
 
 
+#: Maximale Anzahl gehaltener Historie-Messages (User+Assistant zusammen).
+#: Begrenzt das Token-Wachstum langer Sessions.
+MAX_HISTORY_MESSAGES = 20
+
+
 @dataclass
 class OSAgentState:
     """Zustand einer OS-Agent-Session."""
@@ -41,6 +46,15 @@ class OSAgentState:
     task_context: ContextBundle | None = None
     governance: GovernanceDecision | None = None
     match_candidates: list[SkillMatch] = field(default_factory=list)
+    history: list[dict] = field(default_factory=list)
+    """Konversations-Historie: `{"role": "user"|"assistant", "content": str}`."""
+
+    def remember(self, user_message: str, assistant_text: str) -> None:
+        """Turn in die Historie übernehmen (mit Längen-Deckel)."""
+        self.history.append({"role": "user", "content": user_message})
+        self.history.append({"role": "assistant", "content": assistant_text})
+        if len(self.history) > MAX_HISTORY_MESSAGES:
+            del self.history[: len(self.history) - MAX_HISTORY_MESSAGES]
 
 
 async def boot(config: Config | None = None) -> OSAgentState:
@@ -61,6 +75,11 @@ async def select_skill(state: OSAgentState, user_request: str) -> SkillMatch | N
 
     top = best_match(state.config, user_request)
     if top is None:
+        # Kein Match → Skill-Zustand zurücksetzen, damit eine themenfremde
+        # Nachricht nicht mit SOP/Governance des VORHERIGEN Skills läuft.
+        state.active_skill = None
+        state.task_context = None
+        state.governance = None
         return None
 
     skill = load_skill_by_id(state.config, top.skill_id)
@@ -102,6 +121,7 @@ async def handle(
             state.config,
             system_prompt=system_prompt,
             user_message=user_message,
+            history=state.history or None,
             allowed_tools=allowed_tools or None,
             mcp_servers=mcp_servers or None,
             stream_cb=stream_cb,
@@ -118,6 +138,10 @@ async def handle(
         elif result.error:
             run.status = "error"
             run.error = result.error
+
+    # Erfolgreiche Turns in die Historie übernehmen (Multi-Turn-Gedächtnis)
+    if not result.dry_run and not result.error:
+        state.remember(user_message, result.text)
     return result
 
 

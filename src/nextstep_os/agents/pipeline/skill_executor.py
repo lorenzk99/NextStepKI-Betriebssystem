@@ -101,6 +101,35 @@ async def execute_task(task_path: Path, *, config: Config | None = None) -> Exec
             run.status = "error"
             run.error = result.error
 
+    # Fehler/DryRun: Task NICHT als ausgeführt markieren.
+    if result.error:
+        post.metadata["status"] = TaskStatus.FEHLER.value
+        post.metadata["fehler_grund"] = result.error
+        with task_path.open("w", encoding="utf-8") as fh:
+            fh.write(frontmatter.dumps(post, sort_keys=False))
+        return ExecutionResult(
+            task_path=task_path,
+            skill_id=skill_id,
+            output=result.text,
+            status=TaskStatus.FEHLER,
+            dry_run=False,
+            blocked_reason=f"Agent-Fehler: {result.error}",
+        )
+    if result.dry_run:
+        # Kein API-Key: Status unverändert lassen (Retry sobald Key da ist)
+        try:
+            unchanged = TaskStatus(meta.get("status", TaskStatus.SKILL_ZUGEWIESEN.value))
+        except ValueError:
+            unchanged = TaskStatus.SKILL_ZUGEWIESEN
+        return ExecutionResult(
+            task_path=task_path,
+            skill_id=skill_id,
+            output=result.text,
+            status=unchanged,
+            dry_run=True,
+            blocked_reason="DryRun — kein API-Key",
+        )
+
     # Status je nach Ampel
     new_status = (
         TaskStatus.WARTET_AUF_REVIEW

@@ -1,5 +1,9 @@
 # Feedback-Logger Agent
 
+> ℹ️ **Hinweis:** Diese Stage läuft aktuell deterministisch in Python (kein LLM-Call).
+> Dieses Dokument beschreibt das Soll-Verhalten und dient als Referenz, falls die
+> Stage später LLM-gestützt wird.
+
 ## 📖 Übersicht
 
 Du bist der **Feedback-Logger**. Deine einzige Aufgabe: Ausführung dokumentieren und bei Bedarf einen Feedback-Eintrag in `data/feedback/entries/` erstellen.

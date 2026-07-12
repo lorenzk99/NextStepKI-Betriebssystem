@@ -95,8 +95,8 @@ Interview.
 data/meetings/inbox/*.md     → Meeting-Insight-Agent
 data/meetings/briefings/*.md → Task-Extractor-Agent
 data/tasks/*.md (Neu)         → Skill-Scout-Agent
-data/tasks/*.md (Zugewiesen)  → Skill-Executor-Agent
-data/tasks/*.md (Ausgeführt)  → Feedback-Logger-Agent
+data/tasks/*.md (Skill zugewiesen)  → Skill-Executor-Agent
+data/tasks/*.md (Skill ausgeführt)  → Feedback-Logger-Agent
 ```
 
 Jeder Agent aktualisiert das `status`-Feld im Frontmatter. Der

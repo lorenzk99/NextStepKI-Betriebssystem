@@ -51,19 +51,27 @@ def build_os_agent_system_prompt(
         sections.append("\n## SOP (Skill-Body)\n")
         sections.append(active_skill.body)
 
-    # 4. Task-spezifischer Kontext (Stufe 2)
-    if task_context is not None and (task_context.stufe_2 or task_context.stufe_3):
-        sections.append("\n---\n# Aufgaben-Kontext (Stufe 2/3)\n")
-        rendered = []
-        if task_context.stufe_2:
-            rendered.append("## Stufe 2 – Aufgabe\n")
-            for item in task_context.stufe_2:
-                rendered.append(f"### {item.entry.name}\n{item.content.strip()}\n")
-        if task_context.stufe_3:
-            rendered.append("## Stufe 3 – Hintergrund\n")
-            for item in task_context.stufe_3:
-                rendered.append(f"### {item.entry.name}\n{item.content.strip()}\n")
-        sections.append("\n".join(rendered))
+    # 4. Task-spezifischer Kontext (Stufe 2) — Pfade, die schon im
+    #    Boot-Kontext gerendert wurden, nicht doppelt einfügen.
+    boot_paths = {
+        item.entry.path
+        for item in boot_context.stufe_1 + boot_context.stufe_2
+    }
+    if task_context is not None:
+        stufe_2_neu = [i for i in task_context.stufe_2 if i.entry.path not in boot_paths]
+        stufe_3_neu = [i for i in task_context.stufe_3 if i.entry.path not in boot_paths]
+        if stufe_2_neu or stufe_3_neu:
+            sections.append("\n---\n# Aufgaben-Kontext (Stufe 2/3)\n")
+            rendered = []
+            if stufe_2_neu:
+                rendered.append("## Stufe 2 – Aufgabe\n")
+                for item in stufe_2_neu:
+                    rendered.append(f"### {item.entry.name}\n{item.content.strip()}\n")
+            if stufe_3_neu:
+                rendered.append("## Stufe 3 – Hintergrund\n")
+                for item in stufe_3_neu:
+                    rendered.append(f"### {item.entry.name}\n{item.content.strip()}\n")
+            sections.append("\n".join(rendered))
 
     # 5. Governance-Entscheidung
     if governance is not None:

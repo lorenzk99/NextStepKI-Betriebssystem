@@ -217,25 +217,39 @@ def load_context_for_skill(
 
     # --- Stufe 2 ----------------------------------------------------------- #
     used_2 = 0
-    if skill is not None:
-        # a) Register-Einträge für diesen Skill auf Stufe 2
-        for entry in entries:
-            if entry.status != "Aktiv" or entry.kontext_stufe != 2:
-                continue
-            if skill.id not in entry.skills and "*" not in entry.skills:
-                continue
-            loaded = _load_entry(entry, config)
-            if not loaded:
-                bundle.skipped.append((entry.id, "Inhalt leer"))
-                continue
-            if not _fits(loaded.tokens, used_2, budgets.stufe_2):
-                bundle.skipped.append((entry.id, "Token-Budget Stufe 2 überschritten"))
-                continue
-            bundle.stufe_2.append(loaded)
-            used_2 += loaded.tokens
+    stufe_2_paths: set[str] = set()
 
-        # b) Freitext-Pfade aus dem Skill-Frontmatter
+    # a) Register-Einträge auf Stufe 2. Gleiche Regel wie Stufe 1: leere
+    #    `skills`-Liste oder `*` ⇒ global, Personal-Kontext (z.B. Prioritäten,
+    #    Team) wird immer geladen — auch ohne aktiven Skill, damit der Agent
+    #    die aktuellen Prioritäten in jedem Gespräch kennt.
+    for entry in entries:
+        if entry.status != "Aktiv" or entry.kontext_stufe != 2:
+            continue
+        is_for_skill = (
+            "*" in entry.skills
+            or not entry.skills
+            or (skill is not None and skill.id in entry.skills)
+        )
+        is_personal = entry.typ == ContextTyp.PERSONAL
+        if not (is_for_skill or is_personal):
+            continue
+        loaded = _load_entry(entry, config)
+        if not loaded:
+            bundle.skipped.append((entry.id, "Inhalt leer"))
+            continue
+        if not _fits(loaded.tokens, used_2, budgets.stufe_2):
+            bundle.skipped.append((entry.id, "Token-Budget Stufe 2 überschritten"))
+            continue
+        bundle.stufe_2.append(loaded)
+        used_2 += loaded.tokens
+        stufe_2_paths.add(entry.path)
+
+    # b) Freitext-Pfade aus dem Skill-Frontmatter (Duplikate zu a) überspringen)
+    if skill is not None:
         for rel in skill.context.stufe_2_aufgabe:
+            if rel in stufe_2_paths:
+                continue
             loaded = _load_path(rel, config, stufe=2)
             if not loaded:
                 bundle.skipped.append((rel, "Stufe-2-Pfad nicht lesbar"))

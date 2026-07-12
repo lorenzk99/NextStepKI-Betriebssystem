@@ -14,7 +14,6 @@ import re
 from datetime import date
 from pathlib import Path
 
-import frontmatter
 import yaml
 
 from ..config import Config
@@ -32,7 +31,9 @@ LEARNINGS_HEADER_RE = re.compile(r"^##\s+📝?\s*Learnings\s*$", re.MULTILINE)
 def silent_patch_skill(skill_path: Path, learning: str, *, heute: date | None = None) -> None:
     """Hänge einen Learning-Eintrag an die `📝 Learnings`-Sektion der Skill-MD.
 
-    Wenn die Sektion nicht existiert, wird sie am Ende des Body angelegt.
+    Wenn die Sektion nicht existiert, wird sie am Ende angelegt. Arbeitet
+    direkt auf dem Roh-Text — KEIN Frontmatter-Round-Trip, damit
+    YAML-Kommentare und Formatierung im Frontmatter erhalten bleiben.
     """
     if not skill_path.exists():
         raise FileNotFoundError(f"Skill-Datei nicht gefunden: {skill_path}")
@@ -40,26 +41,22 @@ def silent_patch_skill(skill_path: Path, learning: str, *, heute: date | None = 
     learning = learning.strip()
     if not learning:
         raise ValueError("Leeres Learning kann nicht gepatcht werden.")
+    # Doppeltes Datum vermeiden, falls das Learning schon mit Datum beginnt
+    learning = re.sub(r"^\d{4}-\d{2}-\d{2}\s*[:–—-]\s*", "", learning)
 
-    post = frontmatter.load(skill_path)
-    body = post.content
+    raw = skill_path.read_text(encoding="utf-8")
     entry = f"- **{heute.isoformat()}:** {learning}"
 
-    match = LEARNINGS_HEADER_RE.search(body)
+    match = LEARNINGS_HEADER_RE.search(raw)
     if match:
-        # An Header anhängen: finde Header-Ende und füge direkt danach ein.
         insert_at = match.end()
-        # Optional: Kommentar-Block direkt nach Header überspringen.
-        rest = body[insert_at:]
-        prefix = body[:insert_at]
-        # Leerzeile + Eintrag + Rest beibehalten
-        new_body = f"{prefix}\n{entry}\n{rest.lstrip(chr(10))}"
+        rest = raw[insert_at:]
+        prefix = raw[:insert_at]
+        new_raw = f"{prefix}\n{entry}\n{rest.lstrip(chr(10))}"
     else:
-        new_body = f"{body.rstrip()}\n\n## 📝 Learnings\n\n{entry}\n"
+        new_raw = f"{raw.rstrip()}\n\n## 📝 Learnings\n\n{entry}\n"
 
-    post.content = new_body
-    with skill_path.open("w", encoding="utf-8") as fh:
-        fh.write(frontmatter.dumps(post, sort_keys=False))
+    skill_path.write_text(new_raw, encoding="utf-8")
 
 
 # --------------------------------------------------------------------------- #
@@ -76,10 +73,16 @@ def _slugify(text: str, *, maxlen: int = 40) -> str:
 
 
 def _feedback_path(config: Config, entry: FeedbackEntry) -> Path:
+    """Eindeutigen Datei-Pfad bestimmen — nie bestehende Einträge überschreiben."""
     dir_ = config.paths.feedback_dir
     dir_.mkdir(parents=True, exist_ok=True)
-    fname = f"{entry.erstellt_am.isoformat()}-{_slugify(entry.titel)}.yaml"
-    return dir_ / fname
+    base = f"{entry.erstellt_am.isoformat()}-{_slugify(entry.titel)}"
+    path = dir_ / f"{base}.yaml"
+    counter = 2
+    while path.exists():
+        path = dir_ / f"{base}-{counter}.yaml"
+        counter += 1
+    return path
 
 
 def write_feedback(config: Config, entry: FeedbackEntry) -> Path:

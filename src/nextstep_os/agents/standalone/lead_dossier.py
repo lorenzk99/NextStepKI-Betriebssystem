@@ -57,10 +57,25 @@ async def build_dossier(
         model=config.models.pipeline,
     )
 
+    # Fehler/DryRun nicht als Kontextquelle persistieren — sonst landet
+    # Fehlertext als »Lead-Dossier« im Skill-Kontext.
+    if result.error:
+        raise RuntimeError(f"Lead-Dossier fehlgeschlagen: {result.error}")
+    if result.dry_run:
+        return LeadDossierResult(
+            dossier_path=Path("(nicht persistiert — DryRun)"),
+            content=result.text,
+            dry_run=True,
+        )
+
     leads_dir = config.paths.context_sources / "leads"
     leads_dir.mkdir(parents=True, exist_ok=True)
     name = projektname or f"lead-{date.today().isoformat()}"
     dossier_path = leads_dir / f"{_slug(name)}.md"
+    counter = 2
+    while dossier_path.exists():  # bestehende Dossiers nie überschreiben
+        dossier_path = leads_dir / f"{_slug(name)}-{counter}.md"
+        counter += 1
 
     meta = {
         "id": dossier_path.stem,

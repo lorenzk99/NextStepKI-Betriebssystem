@@ -25,6 +25,7 @@ from .config import Config
 from .core.feedback import list_feedback
 from .core.registry import append_skill_registry_entry
 from .core.skill_loader import load_registry, load_skill_by_id
+from .core.tasks import load_tasks
 from .core.telemetry import aggregate, read_runs
 
 
@@ -248,6 +249,23 @@ def stats_data(config: Config) -> list[dict[str, Any]]:
     ]
 
 
+def tasks_data(config: Config) -> list[dict[str, Any]]:
+    """Alle Aufgaben aus data/tasks/ (sortiert nach Priorität/Fälligkeit)."""
+    return [
+        {
+            "id": t.id,
+            "titel": t.titel,
+            "status": t.status.value,
+            "prioritaet": t.prioritaet.value,
+            "faellig": t.faellig.isoformat() if t.faellig else None,
+            "skill": t.zugewiesener_skill,
+            "meeting": t.meeting_ref,
+            "erstellt_am": t.erstellt_am.isoformat(),
+        }
+        for t in load_tasks(config)
+    ]
+
+
 def context_data(config: Config) -> list[dict[str, Any]]:
     """Persönliche Kontext-Profile mit Status (befüllt vs. Template)."""
     result = []
@@ -321,6 +339,8 @@ def _make_handler(config: Config):
                         self._send_json(skill_detail_data(config, skill_id))
                     except KeyError:
                         self._send_json({"error": f"Skill `{skill_id}` nicht gefunden"}, 404)
+                elif path == "/api/tasks":
+                    self._send_json(tasks_data(config))
                 elif path == "/api/feedback":
                     self._send_json(feedback_data(config))
                 elif path == "/api/stats":
@@ -460,6 +480,7 @@ tr:last-child td { border-bottom: none; }
   <nav>
     <button data-tab="skills" class="active">Skills</button>
     <button data-tab="neu">＋ Neuer Skill</button>
+    <button data-tab="aufgaben">Aufgaben</button>
     <button data-tab="kontext">Kontext</button>
     <button data-tab="feedback">Feedback</button>
     <button data-tab="telemetrie">Telemetrie</button>
@@ -529,6 +550,10 @@ tr:last-child td { border-bottom: none; }
     </form>
   </section>
 
+  <section id="tab-aufgaben" style="display:none">
+    <div class="tablewrap"><table id="taskstable"></table></div>
+  </section>
+
   <section id="tab-kontext" style="display:none">
     <div class="tablewrap"><table id="contexttable"></table></div>
   </section>
@@ -577,6 +602,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.onclick = () => {
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b === btn));
   document.querySelectorAll("main > section").forEach(s => s.style.display = "none");
   $("#tab-" + btn.dataset.tab).style.display = "";
+  if (btn.dataset.tab === "aufgaben") loadTasks();
   if (btn.dataset.tab === "kontext") loadContext();
   if (btn.dataset.tab === "feedback") loadFeedback();
   if (btn.dataset.tab === "telemetrie") loadStats();
@@ -652,6 +678,18 @@ $("#newskill").onsubmit = async ev => {
     : `Fehler: ${out.error}`;
   if (res.ok) { f.reset(); loadSkills(); }
 };
+
+// ---- Aufgaben ----
+async function loadTasks() {
+  const rows = await (await fetch("/api/tasks")).json();
+  $("#taskstable").innerHTML = `
+    <tr><th>Prio</th><th>Aufgabe</th><th>Status</th><th>Fällig</th><th>Skill</th><th>Meeting</th></tr>` +
+    (rows.map(t => `<tr>
+      <td>${esc(t.prioritaet)}</td><td>${esc(t.titel)}</td><td>${esc(t.status)}</td>
+      <td>${esc(t.faellig || "—")}</td><td>${esc(t.skill || "—")}</td>
+      <td>${esc(t.meeting || "—")}</td></tr>`).join("")
+     || `<tr><td colspan="6" class="empty">Keine Aufgaben — sie entstehen über die Meeting-Pipeline oder manuell in data/tasks/.</td></tr>`);
+}
 
 // ---- Kontext ----
 async function loadContext() {

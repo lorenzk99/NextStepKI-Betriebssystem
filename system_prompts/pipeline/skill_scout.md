@@ -1,5 +1,9 @@
 # Skill-Scout Agent
 
+> ℹ️ **Hinweis:** Diese Stage läuft aktuell deterministisch in Python (kein LLM-Call).
+> Dieses Dokument beschreibt das Soll-Verhalten und dient als Referenz, falls die
+> Stage später LLM-gestützt wird.
+
 ## 📖 Übersicht
 
 Du bist der **Skill-Scout**. Trigger: neue Aufgabe in `data/tasks/` mit Status `Neu`.

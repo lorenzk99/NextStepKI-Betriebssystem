@@ -39,11 +39,12 @@ cp .env.example .env
 # → data/governance/handbuch.md: Owner-Rollen, Datenklassen, Kennzeichnungspflichten
 
 # 5. Starten
-nextstep-os chat              # Interaktiver OS-Agent
-nextstep-os dashboard         # Web-Dashboard (Skills ansehen & anlegen)
+nextstep-os chat              # Interaktiver OS-Agent (REPL mit Gedächtnis)
+nextstep-os dashboard         # Web-Dashboard (Skills, Aufgaben, Kontext)
+nextstep-os briefing          # ☀️ Tagesbriefing: Aufgaben + Prioritäten
 nextstep-os skills list       # Alle Skills anzeigen
-nextstep-os pipeline run      # Pipeline-Watcher starten
-nextstep-os review            # Monthly Skill Review
+nextstep-os pipeline watch    # Pipeline-Watcher starten
+nextstep-os review monthly    # Monthly Skill Review
 ```
 
 ---
@@ -51,17 +52,28 @@ nextstep-os review            # Monthly Skill Review
 ## CLI-Überblick
 
 ```
-nextstep-os chat                        Interaktive Session mit dem OS-Agent
-nextstep-os dashboard                   Web-Dashboard: Skills, Kontext, Feedback, Telemetrie
+nextstep-os chat [nachricht]            OS-Agent: REPL (ohne Argument) oder Einzelnachricht
+nextstep-os dashboard                   Web-Dashboard: Skills, Aufgaben, Kontext, Feedback
+nextstep-os briefing [--llm]            Tagesbriefing (offline; --llm für KI-Summary)
+nextstep-os doctor                      Setup-Diagnose (Pfade, API-Key, Register)
+nextstep-os stats [skill-id]            Skill-Run-Telemetrie
 nextstep-os skills list                 Registrierte Skills auflisten
 nextstep-os skills show <id>            Skill-Details anzeigen
-nextstep-os context list                Kontext-Einträge auflisten
-nextstep-os pipeline run                Status-Watcher für Pipeline-Agents starten
+nextstep-os skills match <query>        Skill-Matching testen
+nextstep-os skills promote <id>         Skill aktivieren (Activation Gate)
+nextstep-os tasks list [--alle]         Aufgaben-Übersicht nach Status
+nextstep-os tasks show <id>             Aufgaben-Details
+nextstep-os context boot                Boot-Kontext anzeigen
+nextstep-os context show <skill-id>     Kontext eines Skills anzeigen
+nextstep-os pipeline run                Alle Pipeline-Stages EINMAL ausführen
+nextstep-os pipeline watch              Status-Watcher (dauerhaft, pollt alle 5s)
 nextstep-os pipeline meeting <file>     Meeting-Transkript manuell einspielen
-nextstep-os standalone inbox            Inbox Reply Drafter ausführen
-nextstep-os standalone lead <file>      Lead-Dossier-Agent ausführen
-nextstep-os review                      Monthly Skill Review starten
-nextstep-os feedback log                Manuellen Feedback-Eintrag anlegen
+nextstep-os standalone inbox-reply <f>  Inbox Reply Drafter ausführen
+nextstep-os standalone lead-dossier <f> Lead-Dossier-Agent ausführen
+nextstep-os review monthly              Monthly Skill Review erzeugen
+nextstep-os review suggest <skill-id>   LLM-Patch-Vorschlag für einen Skill
+nextstep-os feedback record <titel>     Manuellen Feedback-Eintrag anlegen
+nextstep-os feedback list               Feedback-Einträge auflisten
 ```
 
 ---
@@ -70,7 +82,7 @@ nextstep-os feedback log                Manuellen Feedback-Eintrag anlegen
 
 1. **Silent Patch** (sofort): Feedback im Chat → Skill-MD-Datei bekommt neuen Eintrag in `📝 Learnings` + Regel in SOP
 2. **Feedback-DB** (systematisch): Systemische Issues → YAML-Eintrag in `data/feedback/entries/`
-3. **Monthly Review** (periodisch): `nextstep-os review` analysiert alle Skills + Feedback + erzeugt Review-Report
+3. **Monthly Review** (periodisch): `nextstep-os review monthly` analysiert alle Skills + Feedback + erzeugt Review-Report
 
 ---
 

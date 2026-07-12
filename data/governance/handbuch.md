@@ -207,7 +207,7 @@ Bevor ein KI-Anbieter produktiv eingesetzt wird, müssen folgende Punkte geregel
 ### Review-Rhythmus
 
 - **Wöchentlich:** Skill Owner prüft Feedback auf eigene Skills
-- **Monatlich:** Governance Owner reviewed Ampel-Verteilung + offene Feedbacks (→ `nextstep-os review`)
+- **Monatlich:** Governance Owner reviewed Ampel-Verteilung + offene Feedbacks (→ `nextstep-os review monthly`)
 - **Quartalsweise:** Governance-Handbuch selbst reviewen — Regeln noch aktuell? Neue Datenklassen? Neue Compliance-Anforderungen?
 - **Ad hoc:** Bei Vorfällen (kritischer Fehler, Datenschutz-Incident) → sofortiger Review + ggf. Downgrade
 

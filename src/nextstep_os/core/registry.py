@@ -29,10 +29,11 @@ def read_yaml(path: Path) -> dict[str, Any]:
 
 
 def write_yaml(path: Path, data: dict[str, Any]) -> None:
-    """Schreibe ein Dict als YAML (mit Enum/Path-Konvertierung)."""
+    """Schreibe ein Dict als YAML (atomar: temp-Datei + rename)."""
     path.parent.mkdir(parents=True, exist_ok=True)
     safe = to_yaml_safe(data)
-    with path.open("w", encoding="utf-8") as fh:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8") as fh:
         yaml.safe_dump(
             safe,
             fh,
@@ -40,12 +41,14 @@ def write_yaml(path: Path, data: dict[str, Any]) -> None:
             sort_keys=False,
             default_flow_style=False,
         )
+    tmp.replace(path)
 
 
 def load_skill_registry(path: Path) -> list[dict[str, Any]]:
     """Lade die `skills:`-Liste aus dem Skill-Register."""
     data = read_yaml(path)
-    skills = data.get("skills", [])
+    # `skills:` ohne Wert (YAML-null) ⇒ leere Liste
+    skills = data.get("skills") or []
     if not isinstance(skills, list):
         raise ValueError(f"`skills` in {path} muss eine Liste sein")
     return skills
@@ -54,7 +57,7 @@ def load_skill_registry(path: Path) -> list[dict[str, Any]]:
 def load_context_registry(path: Path) -> list[dict[str, Any]]:
     """Lade die `entries:`-Liste aus dem Kontext-Register."""
     data = read_yaml(path)
-    entries = data.get("entries", [])
+    entries = data.get("entries") or []
     if not isinstance(entries, list):
         raise ValueError(f"`entries` in {path} muss eine Liste sein")
     return entries
@@ -63,7 +66,7 @@ def load_context_registry(path: Path) -> list[dict[str, Any]]:
 def update_skill_registry_entry(path: Path, skill_id: str, patch: dict[str, Any]) -> None:
     """Patch einen einzelnen Skill-Eintrag im Register (ID-basiert)."""
     data = read_yaml(path)
-    skills = data.get("skills", [])
+    skills = data.get("skills") or []
     updated = False
     for entry in skills:
         if entry.get("id") == skill_id:
@@ -79,7 +82,7 @@ def update_skill_registry_entry(path: Path, skill_id: str, patch: dict[str, Any]
 def append_skill_registry_entry(path: Path, entry: dict[str, Any]) -> None:
     """Hänge einen neuen Skill an das Register an (duplicate-safe)."""
     data = read_yaml(path)
-    skills = data.get("skills", [])
+    skills = data.get("skills") or []
     if any(existing.get("id") == entry.get("id") for existing in skills):
         raise ValueError(f"Skill `{entry.get('id')}` existiert bereits im Register")
     skills.append(entry)

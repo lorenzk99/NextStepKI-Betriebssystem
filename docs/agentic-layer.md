@@ -6,7 +6,7 @@ zu.
 
 ## 1. OS-Agent — interaktiv
 
-**Entry-Point:** `nextstep-os chat "<Anfrage>"` (oder REPL, geplant).
+**Entry-Point:** `nextstep-os chat "<Anfrage>"` oder REPL via `nextstep-os chat` (ohne Argument).
 
 **Zweck:** Generischer, dialogischer Agent. Wählt bei jeder Anfrage den
 passenden Skill und führt ihn aus.

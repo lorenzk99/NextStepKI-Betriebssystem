@@ -25,7 +25,7 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from datetime import datetime
 from pathlib import Path
 from time import perf_counter
@@ -69,6 +69,7 @@ def read_runs(config: Config) -> list[SkillRun]:
     if not path.exists():
         return []
     runs: list[SkillRun] = []
+    known_fields = {f.name for f in fields(SkillRun)}
     with path.open("r", encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
@@ -76,6 +77,9 @@ def read_runs(config: Config) -> list[SkillRun]:
                 continue
             try:
                 data = json.loads(line)
+                # Unbekannte Felder (aus älteren/neueren Schema-Versionen)
+                # ignorieren statt die ganze Zeile zu verwerfen.
+                data = {k: v for k, v in data.items() if k in known_fields}
                 runs.append(SkillRun(**data))
             except Exception:  # noqa: BLE001
                 continue

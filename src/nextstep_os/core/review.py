@@ -176,7 +176,8 @@ async def suggest_skill_patch(
         "Du bist der Feedback-Kurator des NextStepKI-Betriebssystems. "
         "Aus einer Liste von Feedback-Einträgen zu einem Skill verdichtest du "
         "die wiederkehrenden Muster zu **EINER einzigen Learning-Zeile**. "
-        "Format exakt: `<Datum>: <konkrete Regel, imperativ>`.\n"
+        "Format exakt: EINE konkrete Regel, imperativ formuliert — "
+        "OHNE Datum (das ergänzt das System beim Patchen selbst).\n"
         "Keine Einleitung, keine Liste, keine Meta-Kommentare — "
         "nur EINE Zeile."
     )

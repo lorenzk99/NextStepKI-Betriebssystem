@@ -60,6 +60,17 @@ async def process_meeting(
         model=config.models.pipeline,
     )
 
+    # Fehler/DryRun: Meeting bleibt in der Inbox (Retry möglich), es wird
+    # KEIN Briefing mit Fehlertext erzeugt und nichts archiviert.
+    if result.error:
+        raise RuntimeError(
+            f"Meeting-Insight fehlgeschlagen für `{meeting_path.name}`: {result.error}"
+        )
+    if result.dry_run:
+        return MeetingInsightResult(
+            briefing_path=meeting_path, summary=result.text, dry_run=True
+        )
+
     # Briefing schreiben
     briefings = config.paths.briefings_dir
     briefings.mkdir(parents=True, exist_ok=True)

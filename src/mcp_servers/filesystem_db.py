@@ -54,15 +54,26 @@ def _write_roots(config: Config) -> list[Path]:
 
 
 def _resolve_safe(target: str, roots: list[Path]) -> Path:
-    """Normalisiere `target` und prüfe, dass er unter einem Root liegt."""
+    """Normalisiere `target` und prüfe, dass er unter einem Root liegt.
+
+    Relative Pfade werden gegen ALLE Roots probiert; ein Kandidat, der
+    bereits existiert, gewinnt (sonst der erste gültige). Damit findet
+    `fs_read("personal/firmenprofil.md")` die Datei unter `data/context/`,
+    auch wenn `data/skills/` der erste Root ist.
+    """
     p = Path(target).expanduser()
     if not p.is_absolute():
-        # Relativ zu irgendeinem Read-Root ist erlaubt – wir probieren das
-        # kürzeste Match. Bei Mehrdeutigkeit nimmt der erste Treffer.
+        first_valid: Path | None = None
         for root in roots:
             candidate = (root / target).resolve()
-            if _is_under(candidate, roots):
+            if not _is_under(candidate, roots):
+                continue
+            if candidate.exists():
                 return candidate
+            if first_valid is None:
+                first_valid = candidate
+        if first_valid is not None:
+            return first_valid
         raise ValueError(f"Pfad `{target}` liegt außerhalb erlaubter Roots.")
     p = p.resolve()
     if not _is_under(p, roots):
