@@ -164,6 +164,19 @@ async def _chat_repl(*, stream: bool) -> None:
 
 
 @app.command()
+def dashboard(
+    host: str = typer.Option("127.0.0.1", help="Bind-Adresse (nur lokal: 127.0.0.1)."),
+    port: int = typer.Option(8321, help="Port des Dashboards."),
+    open_browser: bool = typer.Option(True, "--open/--no-open", help="Browser automatisch öffnen."),
+) -> None:
+    """Web-Dashboard starten: Skills ansehen, neue Skills anlegen."""
+    from .dashboard import serve
+
+    cfg = load_config()
+    serve(cfg, host=host, port=port, open_browser=open_browser)
+
+
+@app.command()
 def version() -> None:
     """Version ausgeben."""
     from . import __version__

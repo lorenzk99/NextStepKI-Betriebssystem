@@ -1,115 +1,180 @@
-# Skill-Register
-# Schnellregister für Semantic Matching durch den Skill-Loader.
-# Quelle der Wahrheit ist jeweils die Skill-MD-Datei — dieses Register
-# wird beim Skill-Build / Skill-Update mit aktualisiert.
-
 skills:
-  - id: neuen-skill-erstellen
-    name: Neuen Skill erstellen
-    path: skills/neuen-skill-erstellen.md
-    status: Aktiv
-    owner: "[OWNER]"
-    ampel: "🟡"
-    execution_mode: Strict
-    nutzungsart: public
-    keywords:
-      - skill erstellen
-      - neuen skill
-      - skill bauen
-      - skill entwickeln
-      - create skill
-      - skill anlegen
-      - prozess dokumentieren
-      - sop erstellen
-    beschreibung: >
-      Meta-Skill: Erstellt neue Skills im System via strukturiertem
-      Interview. Führt durch Briefing, Governance, SOP, Kontext-Mapping,
-      DoD und Activation Gate.
+- id: neuen-skill-erstellen
+  name: Neuen Skill erstellen
+  path: skills/neuen-skill-erstellen.md
+  status: Aktiv
+  owner: '[OWNER]'
+  ampel: 🟡
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - skill erstellen
+  - neuen skill
+  - skill bauen
+  - skill entwickeln
+  - create skill
+  - skill anlegen
+  - prozess dokumentieren
+  - sop erstellen
+  beschreibung: 'Meta-Skill: Erstellt neue Skills im System via strukturiertem Interview.
+    Führt durch Briefing, Governance, SOP, Kontext-Mapping, DoD und Activation Gate.
 
-  - id: angebot-erstellen
-    name: Angebot erstellen
-    path: skills/angebot-erstellen.md
-    status: Aktiv
-    owner: "[OWNER]"
-    ampel: "🟡"
-    execution_mode: Strict
-    nutzungsart: public
-    keywords:
-      - angebot
-      - offer
-      - proposal
-      - kundenangebot
-      - angebot schreiben
-      - angebot erstellen
-      - preisangebot
-    beschreibung: >
-      Erstellt eine vollständige Angebotsseite auf Basis eines Kundenbriefings.
-      Analysiert Bedarf, definiert Angebotsstruktur und schreibt das Angebot
-      im definierten Format.
+    '
+- id: angebot-erstellen
+  name: Angebot erstellen
+  path: skills/angebot-erstellen.md
+  status: Aktiv
+  owner: '[OWNER]'
+  ampel: 🟡
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - angebot
+  - offer
+  - proposal
+  - kundenangebot
+  - angebot schreiben
+  - angebot erstellen
+  - preisangebot
+  beschreibung: 'Erstellt eine vollständige Angebotsseite auf Basis eines Kundenbriefings.
+    Analysiert Bedarf, definiert Angebotsstruktur und schreibt das Angebot im definierten
+    Format.
 
-  - id: kundenprojekt-onboarden
-    name: Kundenprojekt onboarden
-    path: skills/kundenprojekt-onboarden.md
-    status: Aktiv
-    owner: "[OWNER]"
-    ampel: "🟢"
-    execution_mode: Strict
-    nutzungsart: public
-    keywords:
-      - projekt
-      - onboarding
-      - kickoff
-      - kundenprojekt
-      - projekt aufsetzen
-      - projekt starten
-      - stakeholder map
-    beschreibung: >
-      Setzt ein neues Kundenprojekt vollständig auf: Kickoff vorbereiten,
-      Projektseite anlegen, Stakeholder-Map erstellen, Kommunikationsplan
-      definieren.
+    '
+- id: kundenprojekt-onboarden
+  name: Kundenprojekt onboarden
+  path: skills/kundenprojekt-onboarden.md
+  status: Aktiv
+  owner: '[OWNER]'
+  ampel: 🟢
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - projekt
+  - onboarding
+  - kickoff
+  - kundenprojekt
+  - projekt aufsetzen
+  - projekt starten
+  - stakeholder map
+  beschreibung: 'Setzt ein neues Kundenprojekt vollständig auf: Kickoff vorbereiten,
+    Projektseite anlegen, Stakeholder-Map erstellen, Kommunikationsplan definieren.
 
-  - id: email-entwurf
-    name: E-Mail-Entwurf
-    path: skills/email-entwurf.md
-    status: Aktiv
-    owner: "Lorenz Kopp"
-    ampel: "🟡"
-    execution_mode: Strict
-    nutzungsart: public
-    keywords:
-      - email
-      - e-mail
-      - mail
-      - mail schreiben
-      - email schreiben
-      - antwort schreiben
-      - antwortmail
-      - follow up
-      - follow-up
-      - erstkontakt
-      - kundenmail
-      - anfrage beantworten
-    beschreibung: >
-      Schreibt einen E-Mail-Entwurf im Kommunikationsstil des Nutzers.
-      Deckt Standardsituationen ab: Erstkontakt, Follow-up, Antwort auf
-      Kundenanfrage, Partnerkontakt. Vor Versand immer prüfen.
+    '
+- id: email-entwurf
+  name: E-Mail-Entwurf
+  path: skills/email-entwurf.md
+  status: Aktiv
+  owner: Lorenz Kopp
+  ampel: 🟡
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - email
+  - e-mail
+  - mail
+  - mail schreiben
+  - email schreiben
+  - antwort schreiben
+  - antwortmail
+  - follow up
+  - follow-up
+  - erstkontakt
+  - kundenmail
+  - anfrage beantworten
+  beschreibung: 'Schreibt einen E-Mail-Entwurf im Kommunikationsstil des Nutzers.
+    Deckt Standardsituationen ab: Erstkontakt, Follow-up, Antwort auf Kundenanfrage,
+    Partnerkontakt. Vor Versand immer prüfen.
 
-  - id: tages-shutdown
-    name: Tages-Shutdown & Sprint-Prep
-    path: skills/tages-shutdown.md
-    status: Aktiv
-    owner: "[OWNER]"
-    ampel: "🟢"
-    execution_mode: Strict
-    nutzungsart: private
-    keywords:
-      - shutdown
-      - tagesabschluss
-      - sprint
-      - tagesplan
-      - morgen planen
-      - tages rückblick
-      - daily review
-    beschreibung: >
-      Tagesabschluss mit Rückblick, Sprint-Plan für morgen, Diktat &
-      Delegation, Archivierung in Briefing-Datenbank.
+    '
+- id: vertrag-erstellen
+  name: Vertrag erstellen
+  path: skills/vertrag-erstellen.md
+  status: Aktiv
+  owner: Lorenz Kopp
+  ampel: 🔴
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - vertrag
+  - vertrag erstellen
+  - vertrag schreiben
+  - vertragsentwurf
+  - saas vertrag
+  - vermittlungsvertrag
+  - kundenvertrag
+  - contract
+  - vertragserstellung
+  - av vertrag
+  beschreibung: 'Erstellt einen Vertragsentwurf (SaaS, Vermittlung, AV-Vertrag) auf
+    Basis von Kundendaten und Standard-Konditionen. Rechtlich sensibel — immer Review,
+    bei neuen Klauseln juristische Prüfung.
+
+    '
+- id: belege-buchhaltung
+  name: Belege & Buchhaltung vorbereiten
+  path: skills/belege-buchhaltung.md
+  status: Aktiv
+  owner: Lorenz Kopp
+  ampel: 🟡
+  execution_mode: Strict
+  nutzungsart: private
+  keywords:
+  - beleg
+  - belege
+  - buchhaltung
+  - rechnung
+  - rechnungen
+  - quittung
+  - beleg erfassen
+  - belege sortieren
+  - buchhaltung vorbereiten
+  - kontierung
+  - exist nachweis
+  beschreibung: 'Bereitet Belege für die Buchhaltung vor: Datenextraktion, Kategorie-
+    und Kontierungsvorschlag, Buchungssatz-Entwurf, EXIST-Relevanz-Check. Übertrag
+    ins Buchhaltungstool macht der Nutzer.
+
+    '
+- id: linkedin-beitrag
+  name: LinkedIn-Beitrag schreiben
+  path: skills/linkedin-beitrag.md
+  status: Aktiv
+  owner: Lorenz Kopp
+  ampel: 🟡
+  execution_mode: Strict
+  nutzungsart: public
+  keywords:
+  - linkedin
+  - linkedin beitrag
+  - linkedin post
+  - post schreiben
+  - beitrag schreiben
+  - social media
+  - content
+  - thought leadership
+  beschreibung: 'Schreibt LinkedIn-Beiträge für das persönliche Profil oder die NextStepHR-Seite:
+    Hook, Body, CTA, Hashtags, Timing-Empfehlung. Veröffentlichung immer durch den
+    Nutzer.
+
+    '
+- id: tages-shutdown
+  name: Tages-Shutdown & Sprint-Prep
+  path: skills/tages-shutdown.md
+  status: Aktiv
+  owner: '[OWNER]'
+  ampel: 🟢
+  execution_mode: Strict
+  nutzungsart: private
+  keywords:
+  - shutdown
+  - tagesabschluss
+  - sprint
+  - tagesplan
+  - morgen planen
+  - tages rückblick
+  - daily review
+  beschreibung: 'Tagesabschluss mit Rückblick, Sprint-Plan für morgen, Diktat & Delegation,
+    Archivierung in Briefing-Datenbank.
+
+    '

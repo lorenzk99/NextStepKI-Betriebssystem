@@ -40,6 +40,7 @@ cp .env.example .env
 
 # 5. Starten
 nextstep-os chat              # Interaktiver OS-Agent
+nextstep-os dashboard         # Web-Dashboard (Skills ansehen & anlegen)
 nextstep-os skills list       # Alle Skills anzeigen
 nextstep-os pipeline run      # Pipeline-Watcher starten
 nextstep-os review            # Monthly Skill Review
@@ -51,6 +52,7 @@ nextstep-os review            # Monthly Skill Review
 
 ```
 nextstep-os chat                        Interaktive Session mit dem OS-Agent
+nextstep-os dashboard                   Web-Dashboard: Skills, Kontext, Feedback, Telemetrie
 nextstep-os skills list                 Registrierte Skills auflisten
 nextstep-os skills show <id>            Skill-Details anzeigen
 nextstep-os context list                Kontext-Einträge auflisten
